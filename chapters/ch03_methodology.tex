@@ -6,7 +6,82 @@
     How you are planning to test/compare/evaluate your research.
     Criteria used.
 
-    \section{Setup}
+    \section{Introduction}
 
-    \section{Experimental Design}
+    \section{Structure of the chapter}
+    This chapter aims to explain the two state-of-the-art uncertainty estimation methods compared in this research work. The sections \ref{general_framework} and \ref{der} give an intuitive explanation of the methods.
+    
+    \section{A General Framework for Uncertainty Estimation in Deep Learning}\label{general_framework}
+    \subsection{Overview}
+    This work proposes a technique to distinctively estimate data and model uncertainties associated with an output of any Neural Network model.The technique is here after referred as "MCDO\_ADF", representing the fact that is a combination of two ideas, Monte-Carlo Drop Out(MCDO) and Assumed-Density-Filtering (ADF). MCDO\_ADF treat the  two uncertainty components to be related, which sets it apart from most of other uncertainty estimation methods that treat them to be independent. The method employs Bayesian Belief Networks combined with Monte-Carlo sampling for estimating the model uncertainty and relies on the idea of Assumed Density Filtering for  estimating data uncertainty associated with an output. 
+    
+    Authors of the MCDO\_ADF technique claim it to be a general framework to estimate uncertainties in Neural Networks. They give following reasons to validate their claim:
+    \begin{itemize}
+    	\item Using this uncertainty estimation method does not require any architectural changes in the target Neural Network.
+    	\item Applicability of the method to Neural Network models of different tasks.
+    	\item Absence of any need of make changes in the optimization process.
+    	\item Ability of the technique to be applied to already trained models.
+    \end{itemize}
+	
+	The upcoming sections of this chapter explain the MCDO\_ADF technique  and also analyze its claimed "generality" by using it in a Resnet8 based Neural Network regression model meant for the application of steering-angle prediction in autonomous cars.(Note: A detailed description of the data set, training and inference procedures of the Neural Network model is available in the next chapter[]).  
+	
+	
+    \subsection{Integrating MCDO\_ADF with a Neural Network}
+    \subsubsection{MCDO\_ADF as an algorithm}
+    Estimating uncertainty using the MCDO can be formulated as an algorithm consisting of the following steps:
+    \begin{itemize}
+    	\item Transform the Neural Network of interest to its ADF(Assumed Density Filtering) version.
+    	\item Collect a predefined number(T) of Monte-Carlo(MC) samples by forwarding inputs and noise variances $(x,v))$ stochastically through the network for T times.
+    	\item Computation of output predictions and uncertainties  
+    \end{itemize}
+	\subsubsection{Assumed Density Filtering (ADF)}
+	The MCDO\_ADF technique considers sensor noise to be the primary source of data uncertainty in neural network predictions and therefore feeds it to the Neural Network model during the inference. In order to propagate the input data distribution (parameterized by the input as its mean and sensor noise as variance) the technique of ADF is used. Briefly in the context of MCDO\_ADF, ADF replaces every input activation into a probability distribution and also approximates the same using a tractable Gaussian distribution and makes both the mean and noise variance available in the output layer.Following points describe Assume Density Filtering in a more detailed manner:
+	\begin{itemize}
+		\item Assumed Density Filtering(ADF) is a technique in Bayesian machine learning to approximate intractable and complex distribution with distributions that are easy to handle. In the case of Bayesian Inference, ADF aims to project the true posterior onto a distribution of choice. The exponential family of distributions are a popular choice.
+		\item In the case of MCDO\_ADF there is a need to propagate the input data distribution so that the values of its mean and variance (noise variance) are available in the output layer. 
+		\item The input data distribution is considered to be Gaussian in nature. Every intermediate layer outputs the transformed version of the input distribution.  However, when it propagates through non-linearities in a Neural Network the resulting distribution need not be essentially another Gaussian. Such a distribution emerging out of non-linear blocks is also conditioned by distribution over activations of the preceeding layers. Therefore, the resulting distribution becomes intractable.
+		\item Such intractable and complex distributions are estimated using ADF by:
+		\begin{itemize}
+			\item Assuming conditional independence between distribution outputted from a given layer with its preceeding layers. In practice, the noise variance parameter is injected into every intermediate layer of the network explicitly.
+			\item Approximating the complex distribution with a Gaussian distribution whose pair has the least possible value of Kullback-Leibler divergence([]). ADF achieves this by matching the first two moments of the distributions.
+			\item In practice, this is achieved by optimizing the global variational objective([]).
+		\end{itemize} 
+	\end{itemize}
+	In practice, every building block of a Neural Network has its corresponding ADF version and therefore during the inference time the entire model has to be transformed to its ADF equivalent. This gives the ability to the Neural Network model to propagate and output distributions which represent data uncertainty.
+	
+
+	\subsubsection{Monte-Carlo Dropout (MCDO)}
+	
+	This uncertainty estimation method relies on the idea of Monte-Carlo(MC) sampling to estimate model uncertainty associated any prediction. In practice, MC sampling is achieved by enabling dropout during the test time and obtaining the desired number of samples (T), which are nothing but outputs of the Neural Network model during different forward passes of the input. Enabling dropout introduces stochasticity during those forward passes.
+	
+	Following points briefly describe the dropout technique in a general context:
+	\begin{itemize}
+		\item Dropout([]) is primarily a regularization technique used while training Neural Networks in order to avoid over-fitting.
+		\item During dropout certain nodes of a given Neural Network layer are not considered for training. The nodes are ignored with a probability equal to the dropout rate (often denoted by $\textbf{p}$).
+		\item Using dropout during training makes Neural Network layers to adapt in such a way that they cope with mistakes made my the prior layers. 
+		
+	\end{itemize}
+	 
+	In the context of Bayesian inference, the Dropout technique is used to approximate the posterior distribution over weights of a given Neural Network, when the training data and labels are given ($P(W|X,Y))$. The approximation is obtained by applying dropout at the test-time. This makes it possible to obtain multiple predictions for any given input from different architectures resulting from application of dropout to the base Neural Network model. The different architectures obtained along with their weights can be considered as Monte-Carlo(MC) samples from the space of all possible architectures. The number of MC samples to be obtained is a hyper-parameter and denoted by $T$. In another perspective, $T$ equals the number of forward passes through different architectures with different sets of weights $\{W_{1}^t,..,W_{L}^t\}_{t=1}^T$($L$ denotes the number of dropout applied layers in the Neural Network). The first and second moments (mean and variance) of predictions obtained from these stochastic forward passes of given input are utilized to compute model uncertainty(explained in  \ref{adf_mcdo_uncertainty_estimation}). One of the highlights of this technique is that its usage does not require any architectural changes and also can applied to already trained Neural Net models. The hyper-parameters $T$ and $p$ significantly impact the effectiveness of this technique. In the case of $p$ a very high value (close to 1) increases sparsity in nodes and also results in longer convergence-time while a low value eliminates the MC-sampling utility. For our experiment, the value of $p=0.02$ is used. The hyper-parameter $T$ significantly impacts the inference time of a Neural Network model and therefore has to be chosen optimally based on the run-time requirement of the system where the model would be deployed.
+
+
+	\subsubsection{Combining ADF and MCDO}
+
+
+    \subsection{Uncertainty Estimation}{\label{adf_mcdo_uncertainty_estimation}}
+    \subsubsection{Model uncertainty}
+	Model/Epistemic uncertainty arises from the lack of inherent capacity of a Neural Network model to make predictions. The MCDO\_ADF technique estimates this component of uncertainty by using the combination of Bayesian Belief Networks and Monte-Carlo sampling. 
+    
+    \subsubsection{Data uncertainty}
+    
+    \subsubsection{Total predictive uncertainty}
+    
+    \subsection{What makes it a general framework?}
+    
+    \subsection{Training criteria}
+    
+    \subsection{Downsides}
+    
+    
+    \section{Deep Evidential Regression}\label{der}
 \end{document}
