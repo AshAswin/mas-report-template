@@ -2,8 +2,7 @@
 
 \begin{document}
     \chapter{State of the Art}
-	    \section{Structure of the chapter}
-	This chapter aims to explain the two state-of-the-art uncertainty estimation methods compared in this research work. The sections \ref{general_framework} and \ref{der} give an intuitive explanation of the methods.
+	This chapter aims to explain the two state-of-the-art uncertainty estimation methods compared in this research work. The sections \ref{general_framework} and \ref{der} provide a detailed and an intuitive explanation of the techniques.
 	
 	\section{A General Framework for Uncertainty Estimation in Deep Learning}\label{general_framework}
 	\subsection{Overview}\label{mcdo_adf_overview}
@@ -140,6 +139,30 @@
 	The upcoming sections of this chapter explain the method in a detailed manner.
 	
 	\subsection{Conjugate priors}
+	Let us consider a learning problem where Random Variables(RV) $\Theta$ and Y represent model parameters and data respectively. Assuming that RVs are jointly distributed and applying Bayes Rule to determine the probability distribution of $\Theta$ given Y,
+	\begin{equation*}
+		P(\Theta|Y) = \frac{P(Y|\Theta)P(\Theta)}{P(Y)}
+	\end{equation*}
+	The equation can be expressed in words as follows:
+	\begin{equation*}
+		\text{Posterior distribution of $\Theta$ given Y}=\frac{\text{Likelihood of Y given $\Theta$ }.\text{ Prior over $\Theta$}}{\text{Marginal Likelihood of Y}}
+	\end{equation*}
+	During inference, for a particular choice of functions to represent the likelihood distribution, the nature of prior distribution function matches the nature of posterior distribution function. For example, if a normal distribution with unknown mean and
+	variance is used to represent the likelihood distribution and if a Normal-Inverse Gamma distribution(NIG)(described in the next subsection) is used to represent the prior distribution then nature of posterior probability distribution is also observed to be Normal-Inverse Gamma in nature. This can be briefly written as "Normal-Inverse Gamma distribution is the conjugate prior for Normal distribution in likelihood".
+	Conjugate priors help to reduce computations involved in determining the $P(\Theta|Y )$ value every time during the process of determining optimal set of parameters. Beta, Gamma and Normal distributions are favorite choices for priors as they act as conjugate priors for different likelihood distribution functions. In the context of DER, the conjugate prior relationship between distributions is used to introduce a hierarchy between the them to probablistically model the likelihood distribution. 
+	\subsubsection{Distribution hierarchy}
+	Let us assume using a Normal distribution $\mathcal{N}(\mu,\sigma^2)$ to model a set of data points $x_1,x_2,..,x_i$."When a probability distribution A is used to model the given set of data, the uncertainty in the fit is described by probability distribution/s B over parameters of A". This means defining probability distributions over the set of parameters $\mu,\sigma^2$ helps in describing uncertainty in the model fit.
+	 
+	The probability distribution of $\mu$ is modeled by a normal distribution due to its Gaussian nature and the fact that $\mu \in \mathbb{R}$. On the other hand, a Gamma distribution($\Gamma(\alpha,\beta)$) is used to model the probability distribution of $\sigma^2$ owing to its strictly positive nature. The following figure illustrates hierarchical relationship between distributions under consideration, where $(\mu_0,\sigma^{2}_0),(\alpha,\beta)$ represent the parameters of the higher-order Normal and Gamma distributions respectively.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.3]{nig_norm_hierarchy}
+		\caption{Hierarchy in distribution parameters.Image source: }
+		\label{fig_nig_norm_hierarchy}
+	\end{figure}
+	
+	Alternatively, a Normal-Inverse-Gamma distribution (often represented as NIG($\alpha$,$\beta$,$\gamma$,$\lambda$)) can be used to model the probability distribution of $\mu$ and $\sigma^2$ jointly. DER uses the distribution to realize its objectives. Significance of NIG's parameters is explained under the next section.
 	
 	\subsection{Evidential distribution}
 	\subsubsection{From the perspective of Bayesian inference}\label{sec_persp_bayes}
@@ -170,13 +193,12 @@
 	\begin{equation}
 		P(\mu,\sigma^2\mid\gamma,\lambda,\alpha,\beta) =  \frac {\sqrt{\lambda}} {\sigma\sqrt{2\pi} } \, \frac{\beta^\alpha}{\Gamma(\alpha)} \, \left( \frac{1}{\sigma^2} \right)^{\alpha + 1}   \exp \left( -\frac { 2\beta + \lambda(\gamma - \mu)^2} {2\sigma^2}  \right)
 	\end{equation} 
-	\subsubsection{Significance of NIG parameters}
+
+	\subsubsection{Significance of NIG parameters}\label{sec_nig_param}
 	$\gamma$  and $\alpha$ are shape and location parameters of NIG distribution respectively. $\beta$ refers to the inverse-scale (rate) parameter. This means that spread of the distribution is inversely related to $\beta$. There is a relationship that exists between parameters of the NIG distribution. $\gamma$ can be interpreted as the sample mean of $\lambda$ virtual observations, determining NIG's location. On the other hand, spread of the NIG distribution  can be considered to have calculated from 2$\alpha$ virtual observations whose sample mean equals $\gamma$ and their squared deviations summing to 2$\beta$. DER considers the count of virtual observations as evidence($\phi$) in support of the data sample at hand.   
 	\begin{equation}\label{eqn_evidence}
 		\phi = \lambda + 2\alpha
 	\end{equation}
-	\pagebreak
-	\subsubsection{The distribution hierarchy}
 	\begin{figure}[h]
 		\centering
 		\includegraphics[scale=0.37]{nig}
