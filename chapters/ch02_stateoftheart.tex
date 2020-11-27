@@ -108,7 +108,7 @@
 	
 	In summary, both ADF and MCDO techniques approximate probability distributions of data and model with Normal distributions respectively. ADF propagates the input data distribution and approximates them as Gaussians in every Neural Network layer while MCDO approximates the distribution around weights by sampling and forms a Gaussian distribution out of the samples. The variances of these Gaussian distributions are considered to be the uncertainty components and are summed up to yield the predictive uncertainty.
 	
-	\subsection{Inference procedure}
+	\subsection{Inference procedure}\label{sec_mcdo_adf}
 	The MCDO\_ADF method can be applied to already trained deterministic version of the Neural Network models as mentioned in \ref{mcdo_adf_overview}. However, it is also possible to train the Neural Network model of interest with dropout enabled and use the same for inference.
 	In order to estimate the predictive uncertainty during inference:
 	\begin{itemize}
@@ -164,7 +164,7 @@
 	
 	Alternatively, a Normal-Inverse-Gamma distribution (often represented as NIG($\alpha$,$\beta$,$\gamma$,$\lambda$)) can be used to model the probability distribution of $\mu$ and $\sigma^2$ jointly. DER uses the distribution to realize its objectives. Significance of NIG's parameters is explained under the next section.
 	
-	\subsection{Evidential distribution}
+	\subsection{Evidential distribution}\label{sec_evidential_dist}
 	\subsubsection{From the perspective of Bayesian inference}\label{sec_persp_bayes}
 	Let us consider a regression problem with an available dataset $D$ with N pairs of data labels and targets represented by $(x_1,y_1),..,(x_N,y_N)$. The DER method assumes that the targets are  drawn independent and identically from a Gaussian distribution with unknown mean and variance represented by $\mu$ and $\sigma^2$ respectively.
 	\begin{equation}
@@ -211,7 +211,7 @@
 		\item Column \textbf{B} illustrates the evidential distribution  centered around a particular value pair of $\mu$ and $\sigma^2$. This intuitively means that every point on the distribution corresponds to parameters of a possible likelihood distribution. 
 		\item  Sampling the higher order distribution at various locations yield likelihood distributions of varying levels of evidence associated with them. Column \textbf{C} in the illustration shows such realizations. Darker the blue shade used to represent a likelihood-distribution, higher the evidence level associated with it.  
 	\end{itemize}
-	\subsection{Evidential learning objectives}
+	\subsection{Evidential learning objectives}\label{sec_evi_learning_objectives}
 	As described in the overview(\ref{sec_overview_der}), the objectives of DER are two fold: 1. Maximize the model fit and 2. Minimize the evidence measure in an event of error. The method realizes these objectives in form of a loss function/s(two forms) which is integrated to the Neural Network of choice and optimized during training. 
 	
 	\subsubsection{Maximizing the model fit}
