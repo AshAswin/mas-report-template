@@ -140,6 +140,18 @@ Lower the value of NLL better the performance of an uncertainty estimation metho
 \caption{A quantitative comparison of uncertainty estimation methods when applied to Dronet}
 \label{tab_quant_compare}
 \end{table}
-
-\subsection{Qualitative comparison }  
+\begin{itemize}
+	\item It can be inferred that Evidential Dronet outperforms the other two models in terms of both predictive accuracy and quality of uncertainty estimation.
+	\item In the case of predictive accuracy expressed in terms of RMSE, Evidential Dronet outperforms the Vanilla variant only by a slight margin. However, difference in RMSE between Evidential and MCDO\_ADF variants is considerable. This could be partly attributed to the fact that both predictions and uncertainty estimates outputted by the MCDO\_ADF variant depend on the count of Monte-Carlo(MC) samples considered. Higher the value of MC samples better the model's performance(refer figure \ref{fig_mc_count_vs_rmse}).  However, this holds true only un till a particular value of MC samples. For this experiment, 20 MC samples are considered. 
+	\item The relationship between MC sample counts and predictive accuracy holds good for the Explained Variance (EVA) measure as well.
+	\item The quality of predictive uncertainty estimated by the Evidential Dronet expressed in terms of Negative-Log-Likelihood (NLL) is better than the MCDO\_ADF variant. This intuitively means that the former technique is able to determine parameters of the distribution in which likelihood of finding ground truth labels is higher than in the distribution outputted by the latter.
+\end{itemize}
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{RMSE_T20}
+	\caption{A plot depicting relationship between the MC sample count and RMSE during the MCDO\_ADF model inference}
+	\label{fig_mc_count_vs_rmse}
+\end{figure}
+\subsection{Qualitative comparison}
+In order to qualitatively compare predictive uncertainties outputted by both the models, test images corresponding to the highest and lowest values of uncertainty(aleatoric, epistemic and predictive) are taken into consideration and analyzed. For the analysis presented below, the set of images corresponding to an extreme value of uncertainty estimated by a method is represented in the form of "extreme\_category\_method". For example, images corresponding to high values of aleatoric uncertainty estimated by MCDO\_ADF is represented as "high\_aleatoric\_adf". The analysis is presented in form of a table.  
 \end{document}
