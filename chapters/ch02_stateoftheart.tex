@@ -16,7 +16,7 @@
 		\item Ability of the technique to be applied to already trained models.
 	\end{itemize}
 	
-	The upcoming sections of this chapter explain the MCDO\_ADF technique  and also analyze its claimed "generality" by using it in a Resnet8 based Neural Network regression model meant for the application of steering-angle prediction in autonomous cars.(Note: A detailed description of the data set, training and inference procedures of the Neural Network model is available in the next chapter[]).  
+	The upcoming sections of this chapter explain the MCDO\_ADF technique  and also analyze its claimed "generality" by using it in a Resnet8 based Neural Network regression model meant for the application of steering-angle prediction in autonomous cars.(Note: A detailed description of the data set, training and inference procedures of the Neural Network model is available in \ref{chap_methodology}).  
 	
 	
 	\subsection{Integrating MCDO\_ADF with a Neural Network and estimating uncertainties}
@@ -46,8 +46,8 @@
 		\item Such intractable and complex distributions are estimated using ADF by:
 		\begin{itemize}
 			\item Assuming conditional independence between distribution outputted from a given layer with its preceeding layers. 
-			\item Approximating the complex distribution with a Gaussian distribution whose pair has the least possible value of Kullback-Leibler divergence([]). ADF achieves this by matching the first two moments of the distributions.
-			\item In practice, this is achieved by optimizing the global variational objective([]).
+			\item Approximating the complex distribution with a Gaussian distribution whose pair has the least possible value of Kullback-Leibler divergence(described in \ref{sec_kl_div}). ADF achieves this by matching the first two moments of the distributions.
+			\item In practice, this is achieved by optimizing the global variational objective.
 		\end{itemize} 
 	\end{itemize}
 	In practice, every building block of a Neural Network has its corresponding ADF version and therefore during the inference time the entire model has to be transformed to its ADF equivalent. This gives the ability to the Neural Network model to propagate and output distributions which represent data uncertainty.
@@ -72,7 +72,7 @@
 	
 	Following points briefly describe the dropout technique in a general context:
 	\begin{itemize}
-		\item Dropout([]) is primarily a regularization technique used while training Neural Networks in order to avoid over-fitting.
+		\item Dropout(\cite{srivastava2014dropout}) is primarily a regularization technique used while training Neural Networks in order to avoid over-fitting.
 		\item During dropout certain nodes of a given Neural Network layer are not considered for training. The nodes are ignored with a probability equal to the dropout rate (often denoted by $\textbf{p}$).
 		\item Using dropout during training makes Neural Network layers to adapt in such a way that they cope with mistakes made my the prior layers. 
 		
@@ -111,7 +111,7 @@
 	The MCDO\_ADF method can be applied to already trained deterministic version of the Neural Network models as mentioned in \ref{mcdo_adf_overview}. However, it is also possible to train the Neural Network model of interest with dropout enabled and use the same for inference.
 	In order to estimate the predictive uncertainty during inference:
 	\begin{itemize}
-		\item Every layer of the Neural Network has to replaced with its ADF equivalent so that they are equipped with the ability to propagate data distributions. The implementation of ADF equivalents for most of the Neural Network building blocks is available in [].
+		\item Every layer of the Neural Network has to replaced with its ADF equivalent so that they are equipped with the ability to propagate data distributions. The implementation of ADF equivalents for most of the Neural Network building blocks is available in the Github repository of \cite{gast2018lightweight}.
 		\item The value of noise variance (a constant value) obtained from the sensor's data sheet is fed along with the input data to the ADF transformed input layer of the network. During propagation through intermediate layers, it is ensured that at least a minimum value of variance is propagated. In the case of experiment described in the next chapter, a minimum value of 0.001 is used.
 		\item Every input along with the noise variance undergoes T stochastic forward passes through the network to generate T predictions.  
 	\end{itemize}
@@ -123,7 +123,7 @@
 		\item The authors of MCDO\_ADF quote its ability to be applied to already trained models as one of the key reasons for its generality. However, retraining a Neural Network model is something feasible in most of the cases.
 		\item As hyper parameters such as drop-out rate($p$), number of MC samples(T) and noise variance have a major role to play in this technique, it adds to the responsibilities of the practitioner to optimally choose them based on the problem at hand.
 	\end{itemize}    
-	**Downsides of MCDO and ADF to be read and listed**\pagebreak
+	\pagebreak
 	\section{Deep Evidential Regression}\label{der}
 	
 	\subsection{Overview}\label{sec_overview_der}  
@@ -238,9 +238,14 @@
 	
 	The proposed loss function aims to determine the set of parameters m which maximizes the term $P(y_i|m)$(evidence) for the given target $y_i$. Similar to Maximum Likelihood Estimation, the objective of maximization of marginal likelihood is re-framed as minimization of negative log of marginal-likelihood(NLL) for computational convenience.
 	The loss function is expressed as:
-	
+	\begin{align}
+		\mathcal{L}_i^{NLL}(w)&=-logP(y_i|m)\\
+		\mathcal{L}_i^{NLL}(w)&= -log(2^{0.5+\alpha}\beta^\alpha\sqrt{\frac{\lambda}{2\pi(1+\lambda)}}(2\beta+\frac{\lambda(\gamma-y_i)^2}{1+\lambda})^{-0.5-\alpha})
+	\end{align}
 	Alternative to the usual way of minimizing Negative log likelihood the author proposes yet another form for the loss function which minimizes sum-of-squared errors between the prior and data sampled from the likelihood function. Following is the expression for the Sum Of Squared errors(SOS) version of the loss function:
-	
+	\begin{equation}
+		\mathcal{L}_i^{SOS}(w)=(\frac{\Gamma(\alpha-0.5)}{4\Gamma(\alpha)\lambda\sqrt{\beta}})(2\beta(1+\lambda)+(2\alpha-1)\lambda(y_i-\gamma)^2)
+	\end{equation}
 	The author claims the SOS version of loss function to be relatively stable while training and also to perform better than the other during evaluation. The portion of loss function $\mathcal{L}$ described in this section only achieves the "model fitting" objective of DER. 
 	
 	\subsubsection{Minimizing evidence on errors}

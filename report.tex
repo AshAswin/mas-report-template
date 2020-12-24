@@ -10,6 +10,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{multirow}
+\usepackage{tabulary}
 \graphicspath{{./images/}}
 % \documentclass[rnd]{mas_report}
 
@@ -29,12 +30,11 @@
 % \phdproject{Title of PhD}
 
 \supervisors{%
-First supervisor\\
-Second Supervisor\\
-Third Supervisor
+Prof. Dr. Nico Hochgeschwender\\
+Deebul Nair\\
 % \thephdsupervisor
 }
-\date{Month 20XX}
+\date{November 2020}
 
 % \thirdpartylogo{path/to/your/image}
 
@@ -89,9 +89,9 @@ Third Supervisor
 \subfile{chapters/ch01_introduction}
 \subfile{chapters/ch02_stateoftheart}
 \subfile{chapters/ch03_methodology}
-\subfile{chapters/ch04_solution}
+%\subfile{chapters/ch04_solution}
 \subfile{chapters/ch05_evaluation}
-\subfile{chapters/ch06_results}
+%\subfile{chapters/ch06_results}
 \subfile{chapters/ch07_conclusion}
 
 %-------------------------------------------------------------------------------
@@ -106,8 +106,9 @@ Third Supervisor
 %-------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %-------------------------------------------------------------------------------
+
 \addcontentsline{toc}{chapter}{References}
 \bibliographystyle{plainnat} % Use the plainnat bibliography style
-\bibliography{bibliography.bib} % Use the bibliography.bib file as the source of references
-
+\bibliography{bibliography} % Use the bibliography.bib file as the source of references
+\nocite{*}
 \end{document}
