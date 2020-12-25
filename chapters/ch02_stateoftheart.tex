@@ -2,8 +2,39 @@
 
 \begin{document}
     \chapter{State of the Art}
-	This chapter aims to explain the two state-of-the-art uncertainty estimation methods compared in this research work. The sections \ref{general_framework} and \ref{der} provide a detailed and an intuitive explanation of the techniques.
+	This chapter aims to explain the state-of-the-art uncertainty estimation methods considered for this research work. 
+	\section{Dropout as Bayesian Approximation}
+	The method proposed by Gal {\etal} [\cite{gal2016dropout}] estimates model uncertainty in Neural Net models using Dropout [\cite{srivastava2014dropout}] which is a commonly used regularization technique. The work proves the equivalence between a Dropout applied Neural Network model and an approximated Deep Gaussian process model and establishes Dropout as a means to approximate the posterior predictive distribution. The absence of any need to make changes to the optimization process for integrating this method to a Neural Network model can be considered as one of its unique features. The technique applies to Neural Nets meant for both classification and regression tasks. 
 	
+	In order to obtain model uncertainty using this method in practice, dropout is enabled during the test-time and a given input is passed through the Neural Network a number of times equal to the pre-defined Monte-Carlo sample count hyper-parameter. The sample mean and variance of multiple stochastic forward passes correspond to the final model output and model variance respectively. 
+	
+	Though this method forms the basis of a few uncertainty estimation methods like [\cite{loquercio2020a}], the need for multiple stochastic forward passes makes it computationally expensive and unsuited for real-time applications.
+	
+	\section{Deep Ensembles}
+	  Deep Ensembles [\cite{lakshminarayanan2017simple}] is a non-Bayesian approach to estimate predictive uncertainty by using outputs from an ensemble of Neural Networks. The work by LakshmiNarayanan {\etal}  also proposes the idea of leveraging adversarial perturbations generated using the Fast Gradient SignMethod(FGSM)[\cite{goodfellow2015explaining}], to smoothen predictive distributions.
+	  
+	  Authors show advantages of using Deep Ensembles over the base-line approach proposed by Gal {\etal} [\cite{gal2016dropout}].The ability to report of high uncertainty estimates for Out-Of-Distribution and adversarial samples is claimed and proved by evaluating the method on a number of datasets for both regression and classification tasks. The work can be considered as one of the first frequentist approaches to estimate predictive uncertainty in Neural Networks.
+	  
+	  With an increase in the number of member networks in an ensemble, the neural net model size increases as well. Therefore, the method is not suitable for very deep network architectures. Also, the need for diversity amongst ensemble members has a significant impact on the quality of estimated uncertainty.  
+	\section{Light-weight probabilistic deep networks}
+	 Lightweight Probabilistic Deep Networks [\cite{gast2018lightweight}] by Gast {\etal} enables conversion of a deterministic Neural Network to its probabilistic equivalent which is capable of propagating and outputting parameters of the predictive distribution, in turn uncertainty linked to it. The conversion is achieved in two steps: 
+	 \begin{itemize}
+	 \item Introducing a probabilistic output layer that produces moments of the predictive distribution as its outputs.
+	 \item Replacing intermediate activations with their probabilistic equivalents. Assumed Density Filtering(ADF)(explained in \ref{sec_adf}) a form of Expectation Propagation is used to achieve it. 
+	 \end{itemize}
+	 
+	 The need for minor architectural changes and no change in the optimization process is a key feature of this method. The method does not represent weights probabilistically, which results in over-confident predictions.
+	  
+	\section{Prior Networks}
+	Malinin \etal [\cite{malinin2018predictive}] proposed a technique to estimate predictive uncertainties in Neural Nets for classification, by parameterizing a prior distribution over the predictive distribution. The work uses Dirichlet distribution as the higher-order(prior) distribution over predictive categorical distributions, due to existence of  conjugate prior relationship between the pair which makes the posterior analytically tractable. In this way, the variances(uncertainties) around parameters of the categorical distribution are modeled. Parameters of the higher-order distribution are included as a part of the loss function which gets optimized.
+	
+	 Prior Networks can be considered as one of the earliest works when it comes to learning how to model uncertainty from the given training data.Another important contribution of this work is that the method separates out the uncertainty that arises due to mismatch between training and test data distributions as \enquote{distributional uncertainty}. Authors claim the work to outperform other uncertainty estimation methods when it comes to reporting misclassification and Out-Of-Distribution(OOD) input samples.
+	
+	
+	The proposed method is defined for classification setup and therefore cannot be used in regression nets. Also, the work lacks strong experimental evaluation as its assessed only on toy datasets with two other uncertainty estimation methods.
+	
+	\section{Choice of methods for this research work}
+	The methods listed so far suffer from at least one of the following downsides: increased model inference time, increased model size, under/over estimation of uncertainties , disregard any relationship between components of uncertainty. This research work considers \enquote{A General Framework for Uncertainty Estimation in Deep Learning} [\cite{loquercio2020a}] and \enquote{Deep Evidential Regression}[\cite{amini2020deep}] for benchmarking, based on claims made by their authors that they overcome deficits of other methods, as listed above. The rest of this chapter explains both the methods descriptively.
 	\section{A General Framework for Uncertainty Estimation in Deep Learning}\label{general_framework}
 	\subsection{Overview}\label{mcdo_adf_overview}
 	This work proposes a technique to distinctively estimate data and model uncertainties associated with an output of any Neural Network model.The technique is here after referred to as "MCDO\_ADF", representing the fact that is a combination of two ideas, Monte-Carlo Drop Out(MCDO) and Assumed-Density-Filtering (ADF). MCDO\_ADF treat the  two uncertainty components to be related, which sets it apart from most of other uncertainty estimation methods that treat them to be independent. The method employs Bayesian Belief Networks combined with Monte-Carlo sampling for estimating the model uncertainty and relies on the idea of Assumed Density Filtering for  estimating data uncertainty associated with an output. 
@@ -37,7 +68,7 @@
 	
 	
 	
-	\subsubsection{Assumed Density Filtering (ADF)}
+	\subsubsection{Assumed Density Filtering (ADF)}\label{sec_adf}
 	The MCDO\_ADF technique considers sensor noise to be the primary source of data uncertainty in neural network predictions and therefore feeds it to the Neural Network model during the inference. In order to propagate the input data distribution (parameterized by the input as its mean and sensor noise as variance) the technique of ADF is used. Briefly in the context of MCDO\_ADF, ADF replaces every input activation into a probability distribution and also approximates the same using a tractable Gaussian distribution and makes both the mean and noise variance available in the output layer.Following points describe Assume Density Filtering in a more detailed manner:
 	\begin{itemize}
 		\item Assumed Density Filtering(ADF) is a technique in Bayesian machine learning to approximate intractable and complex distribution with distributions that are easy to handle. In the case of Bayesian Inference, ADF aims to project the true posterior onto a distribution of choice. The exponential family of distributions are a popular choice.
@@ -123,7 +154,7 @@
 		\item The authors of MCDO\_ADF quote its ability to be applied to already trained models as one of the key reasons for its generality. However, retraining a Neural Network model is something feasible in most of the cases.
 		\item As hyper parameters such as drop-out rate($p$), number of MC samples(T) and noise variance have a major role to play in this technique, it adds to the responsibilities of the practitioner to optimally choose them based on the problem at hand.
 	\end{itemize}    
-	\pagebreak
+	
 	\section{Deep Evidential Regression}\label{der}
 	
 	\subsection{Overview}\label{sec_overview_der}  
