@@ -25,6 +25,10 @@
 	 
 	 The need for minor architectural changes and no change in the optimization process is a key feature of this method. The method does not represent weights probabilistically, which results in over-confident predictions.
 	  
+	  
+	\section{Aleatoric uncertainty as learned loss attenuation}
+	Kendall {\etal} proposed the method[\cite{kendall2017what}] which aims to include aleatoric variance parameter as a part of the loss function to learn it from training data. The work presents a framework that combines Monte-Carlo Dropout[\cite{gal2016dropout}] and the heteroscedastic loss function to estimate model and data uncertainties respectively. The idea of learning a mapping from input data to aleatoric uncertainty is an important contribution of this work.
+	The method disregards any relationship between components of uncertainty as they are treated as independent entities, which does not hold true.
 	\section{Prior Networks}
 	Malinin \etal [\cite{malinin2018predictive}] proposed a technique to estimate predictive uncertainties in Neural Nets for classification, by parameterizing a prior distribution over the predictive distribution. The work uses Dirichlet distribution as the higher-order(prior) distribution over predictive categorical distributions, due to existence of  conjugate prior relationship between the pair which makes the posterior analytically tractable. In this way, the variances(uncertainties) around parameters of the categorical distribution are modeled. Parameters of the higher-order distribution are included as a part of the loss function which gets optimized.
 	
