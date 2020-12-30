@@ -28,7 +28,50 @@ The Udacity steering angle dataset (available in \cite{udacity_dataset}) consist
 	\label{fig_steer_data_samples}
 \end{figure}
 
-Steering angle prediction is both a safety and time critical application which serves as an essential component of any autonomous vehicle. As enhancing functional safety in such applications is one of the key objectives of using uncertainty estimation methods, the steering angle data set is chosen for benchmarking the techniques considered for this research work.   
+Steering angle prediction is both a safety and time critical application which serves as an essential component of any autonomous vehicle. As enhancing functional safety in such applications is one of the key objectives of using uncertainty estimation methods, the steering angle data set is chosen for benchmarking the techniques considered for this research work.
+
+\subsection{1D datasets}
+A set of three different one-dimensional functions are used to evaluate the considered state-of-the-art uncertainty methods. Use of low-dimensional datasets for evaluation has certain advantages: increased control over experimental parameters when compared to high-dimensional data, ease in visualizing results and reduced experimentation time. The following table lists the set of functions considered for this research work along with their specifications.
+
+\begin{table}[h]
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{Identifier} & \textbf{\begin{tabular}[c]{@{}c@{}}1D function\\ $y=f(x)+\epsilon$\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Noise parameters\\ $\epsilon \sim \mathcal{N}(\mu,(\sigma)^2)$\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Train and test data range\\ (points are equally spaced)\end{tabular}}                                  \\ \hline
+		fn\_1               & $y=sin(3x)/3x+\epsilon$                                                          & $\epsilon \sim \mathcal{N}(0,(0.08)^2)$                                                                         & \begin{tabular}[c]{@{}c@{}}train: 100 points in {[}-3,3{]},\\ test:   100 points in {[}-5,5{]}\end{tabular}                               \\ \hline
+		fn\_2               & $y=0.1x^3+\epsilon$                                                              & $\epsilon \sim \mathcal{N}(0,(0.025)^2)$                                                                        & \begin{tabular}[c]{@{}c@{}}train: 50 points in {[}-4,-1{]} $\bigcup$ 50 points in {[}1,4{]}\\ test: 200 points in {[}-4,4{]}\end{tabular} \\ \hline
+		fn\_3               & $y=-(1+x)sin(1.2x)+\epsilon$                                                     & $\epsilon \sim \mathcal{N}(0,(0.04)^2)$                                                                         & \begin{tabular}[c]{@{}c@{}}train: 50 points in {[}-6,-2{]} $\bigcup$ 50 points in {[}2,6{]}\\ test: 200 points in {[}-6,6{]}\end{tabular}   \\ \hline
+	\end{tabular}
+	\caption{\label{1D dataset specs} Specifications of 1D datasets}
+\end{table}
+Train and test data ranges for every function considered are chosen with an intent to evaluate the performance of uncertainty estimation methods in both within and outside the bounds of training data. For fn\_1, the test data range is chosen to lie on either sides of the of the training data range. For the other two functions, the test data ranges are chosen to lie in between their train data ranges.
+
+A zero-mean Gaussian noise is added to training data of all three functions, with different values of standard-deviation. The set of functions are plotted in the following figure. 
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{/toy_dataset/fn1}
+		\caption{$y=sin(3x)/3x+\epsilon, \epsilon \sim \mathcal{N}(0,(0.08)^2)$}
+		\label{fig:y equals x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{/toy_dataset/fn2}
+		\caption{$y=0.1x^3+\epsilon, \epsilon \sim \mathcal{N}(0,(0.025)^2)$}
+		\label{fig:three sin x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{/toy_dataset/fn3}
+		\caption{$y=-(1+x)sin(1.2x)+\epsilon, \epsilon \sim \mathcal{N}(0,(0.04)^2)$}
+		\label{fig:five over x}
+	\end{subfigure}
+	\caption{Functions in 1D dataset}
+	\label{fig_1d_dataset}
+\end{figure}
+   
 \section{Network architectures}
 \subsection{Dronet}
 Dronet, a residual convolutional network architecture is used for experiments conducted on the steering angle dataset. The Neural Network is primarily designed to safely navigate a drone by performing the tasks of steering angle prediction(regression) and collision detection(binary classification). However, for the experiments conducted in this research work the collision detection output is not required and therefore its corresponding output branch in the Neural Networks output layer is discarded. Figure \ref{fig_resnet8} depicts Dronet's architecture.
@@ -39,7 +82,9 @@ The model used for experiments takes a gray-scale input of size 200x200 and prop
 	\caption{(a) Dronet architecture (b) Structure of every residual block . Collision classification output (bounded by the red box) is discarded and the steering angle prediction branch(bounded by the green box) is retained for this experiment.  Image source: }
 	\label{fig_resnet8}
 \end{figure}
- 
+\subsection{Neural Network for 1D datasets}\label{1D_net}
+In order to conduct experiments on the set of 1D functions, a simple Neural Network architecture consisting of two fully-connected layers and a ReLU(Rectified Linear Unit) non-linearity is used(as shown in). The network is modified based on requirements of the integrated uncertainty estimation method. In the case of variant used with DER, the last fully connected layer is modified to output parameters of the evidential distribution. The MCDO\_ADF variant of the Neural Network contains an additional dropout layer in order to facilitate extraction of MC samples, as described in \ref{general_framework}. Also, after training the model is converted to its ADF equivalent.
+\subsection{Gaussian Processes}
 \section{Training details}
 \subsection{Dronet with steering angle dataset}
 In order to benchmark the considered uncertainty estimation methods(MCDO\_ADF and DER), a set of three Dronet models are used: 1. Vanilla version of Dronet 2. MCDO\_ADF version of dronet with dropout layers after convolution layers 3. Evidential version of Dronet which uses the evidential loss function. Training details for those variants are provided in upcoming sections.
@@ -63,13 +108,13 @@ Choice of certain hyperparameter values remains unchanged for training all the t
 \end{table}
 
 
-\subsection{Vanilla Dronet}
+\subsubsection{Vanilla Dronet}
 A simple dronet model predicts steering angle for the given image input. Training the model involves reduction of the Mean Squared Error (MSE) loss, which is popular choice for regression problems. Optimizing the MSE loss function intuitively means reduction of mean over euclidean distance (L2-Norm) between ground truth labels and predictions of observed data. The MSE loss function can be expressed as follows:
 
 \begin{equation}
 	\mathbf{L}(y,\hat{y})=\frac{1}{N}\sum_{i=0}^{N}(y-\hat{y}_i)^2
 \end{equation} 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.4]{dronet_mse_loss}
 	\caption{Plot depicting the trend of Mean-Squared-Error loss while training vanilla Dronet}
@@ -78,9 +123,9 @@ A simple dronet model predicts steering angle for the given image input. Trainin
 
 The technique of early stopping is used to avoid over-fitting, by saving model weights at the epoch corresponding to the least validation loss.
 
-\subsection{MCDO\_ADF Dronet}
+\subsubsection{MCDO\_ADF Dronet}
 This variant of Dronet is trained to facilitate estimation of uncertainty associated with its predictions using the MCDO\_ADF technique. The training procedure for this variant remains unchanged from the Vanilla variant except for the  introduction of dropout after every convolution layer. Though it is sufficient to have the vanilla variant for applying this method, dropout was used during training with an intent to regularize the process.
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.4]{dronet_MCDO_mse_loss_plot}
 	\caption{Plot depicting the trend of Mean-Squared-Error loss while training MCDO\_ADF Dronet}
@@ -89,14 +134,35 @@ This variant of Dronet is trained to facilitate estimation of uncertainty associ
 
 The inference procedure for MCDO\_ADF applied models is clearly explained in \ref{sec_mcdo_adf}. There are three hyper-parameters additionally required for the procedure: 1. Monte-Carlo(MC) sample count 2. Noise-variance 3. Minimum-variance. The value of MC sample count has a direct impact on the inference time as it determines number of forward passes for a given input to determine model uncertainty. For this experiment, we set its value to be 20 to replicate results provided in \cite{loquercio2020a}. Both the values of noise-variance and minimum variance are chosen to be 0.001. Noise variance indicates the level of sensor noise and minimum-variance signifies the minimum value of noise-variance to be propagated through every layer.
 
-\subsection{Evidential Dronet}
+\subsubsection{Evidential Dronet}
 The evidential Dronet model outputs parameters of the evidential distribution(described in the section \ref{sec_evidential_dist}) for a given input image. The distribution parameters can be in turn used to calculate prediction and uncertainty associated with it. Except for the choice of evidential loss function(described in \ref{sec_evi_learning_objectives}) for this model , training criteria remains unchanged from the vanilla variant.
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.4]{dronet_evidential_loss_plot}
 	\caption{Plot depicting the trend of evidential loss while training evidential Dronet}
 	\label{fig_mse_loss_mcdo_dronet}
 \end{figure}
+\subsection{Neural Net with 1D dataset}
+Similar to the case of Dronet, two variants of the simple network described in \ref{1D_net} are used for evaluation. The MCDO\_ADF variant is trained using MSE loss, while evidential loss is used for its evidential counterpart. Also, the MCDO\_ADF variant uses dropout during test time. The following table contains values of hyperparamters that remain common to both the variants.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|} 
+		\hline
+		\textbf{Hyperparameter} & \textbf{Value}                         \\ 
+		\hline
+		Batch size              & Training data set size                 \\ 
+		\hline
+		Optimizer               & Adam                                   \\ 
+		\hline
+		Learning rate           & 0.001                                  \\ 
+		\hline
+		Epochs                  & 20000                                  \\ 
+		\hline
+		Initializers            & Normal initializer for weights and zeros for bias  \\
+		\hline
+	\end{tabular}
+\caption{Choice of hyperparameters for Neural nets used with 1D datasets}
+\end{table}
 
 
 

@@ -143,4 +143,115 @@ In order to evaluate the robustness of the considered uncertainty estimation met
 
 It can be inferred from the plot that the increase in values of RMSE of the model using DER is consistent with the increase in perturbation levels, while a lot of variations can be observed in the case of MCDO\_ADF variant. In the case of relationship between $\epsilon$ and predictive uncertainty, the predictive uncertainties estimated by DER remains almost constant in the interval between $\epsilon = $ but increase steadily then after. Similar to the case of $\epsilon$ Vs RMSE, a lot of fluctuations can be observed in the uncertainty estimates produced for different levels of $\epsilon$.
 
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/homo_fn1}
+	\caption{$\epsilon=0$}
+	\label{fig:y equals x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/hetero_fn1}
+	\caption{$\epsilon=0.06$}
+	\label{fig:five over x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn1}
+	\caption{$\epsilon=0.02$}
+	\label{fig:three sin x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/der_fn1}
+	\caption{$\epsilon=0.06$}
+	\label{fig:five over x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/homo_fn2}
+	\caption{$\epsilon=0.06$}
+	\label{fig:five over x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/hetero_fn2}
+	\caption{$\epsilon=0.06$}
+	\label{fig:five over x}
+	\end{subfigure}
+\end{figure}
+
+\begin{figure}[h]\ContinuedFloat
+	\centering
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn2}
+	\caption{$\epsilon=0.06$}
+	\label{fig:five over x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/der_fn2}
+	\caption{$\epsilon=0.06$}
+	\label{fig:five over x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/homo_fn3}
+	\caption{$\epsilon=0.06$}
+	\label{fig:five over x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/hetero_fn3}
+	\caption{$\epsilon=0.06$}
+	\label{fig:five over x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn3}
+	\caption{$\epsilon=0.06$}
+	\label{fig:five over x}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{toy_dataset/der_fn3}
+	\caption{$\epsilon=0.06$}
+	\label{fig:five over x}
+	\end{subfigure}
+	\hfill
+	\caption{Images depicting increasing levels of Adversarial noise}
+	\label{fig_adv_example}
+\end{figure}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+\begin{table}[H]
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		\textbf{\begin{tabular}[c]{@{}c@{}}Function\\ y=f(x)\end{tabular}} & \textbf{Metric} & \textbf{\begin{tabular}[c]{@{}c@{}}Homoscedastic\\ GP\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Heteroscedastic\\ GP\end{tabular}} & \textbf{Evidential} & \textbf{MCDO\_ADF}                    \\ \hline
+		\multirow{3}{*}{$y=\frac{sin(3x)}{3x}$}                            & NLL             & \textbf{-0.82}                                                      & -0.51                                                                 & 0.57                & 2.27                                  \\ \cline{2-6} 
+		& RMSE            & \textbf{0.07}                                                       & 0.08                                                                  & 0.40                & 0.39                                  \\ \cline{2-6} 
+		& EVA             & \textbf{0.94}                                                       & 0.91                                                                  & -0.29               & -0.43                                 \\ \hline
+		\multirow{3}{*}{$y=0.1x^3$}                                        & NLL             & \textbf{-2.44}                                                      & -1.77                                                                 & -0.15               & 1.11                                  \\ \cline{2-6} 
+		& RMSE            & \textbf{$\sim$0.00}                                                 & 0.03                                                                  & 0.23                & 0.11                                  \\ \cline{2-6} 
+		& EVA             & 0.99                                                                & 0.99                                                                  & \textbf{0.99}       & 0.99                                  \\ \hline
+		\multirow{3}{*}{$y=-(1+x+sin(1.2x)$}                               & NLL             & \textbf{-1.02}                                                      & 1.91                                                                  & 6.14                & \textgreater{}\textgreater{}1(182049) \\ \cline{2-6} 
+		& RMSE            & 0.61                                                                & \textbf{0.15}                                                         & 2.68                & 0.8                                   \\ \cline{2-6} 
+		& EVA             & 0.94                                                                & \textbf{0.99}                                                         & -0.05               & 0.87                                  \\ \hline
+	\end{tabular}
+\end{table}
+
 \end{document}
