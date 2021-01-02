@@ -84,14 +84,24 @@ The model used for experiments takes a gray-scale input of size 200x200 and prop
 \end{figure}
 \subsection{Neural Network for 1D datasets}\label{1D_net}
 In order to conduct experiments on the set of 1D functions, a simple Neural Network architecture consisting of two fully-connected layers and a ReLU(Rectified Linear Unit) non-linearity is used(as shown in). The network is modified based on requirements of the integrated uncertainty estimation method. In the case of variant used with DER, the last fully connected layer is modified to output parameters of the evidential distribution. The MCDO\_ADF variant of the Neural Network contains an additional dropout layer in order to facilitate extraction of MC samples, as described in \ref{general_framework}. Also, after training the model is converted to its ADF equivalent.
-\subsection{Gaussian Processes}
+\subsection{Gaussian Process(GP) models(1D datasets)}
+A pair of Gaussian Process (GP) models are included along side MCDO\_ADF and DER for the evaluation on 1D datasets. Gaussian Processes can be understood as generalization of multi-variate normal distribution to infinite dimensions. In another perspective a GP represents the distribution over possible functions $f(x)$ that are consistent with given data,and is parameterized by mean $m(x)$ and covariance functions($k(x, x^\prime)$). A GP can be represented as follows:
+
+\begin{equation}
+	f(x)  \sim \mathcal{GP}(m(x),k(x, x^\prime))
+\end{equation}
+
+Gaussian Process models can be categorized into two types based on their assumptions about observation noise in data. Homoscedastic GPs assume independence between input data location and noise level while heteroscedastic GPs consider both the entities to be independent. In this research works both homoscedastic and heteroscedastic GPs are used for them to be compared by the two uncertainty estimation methods.
+\subsubsection{Rationale behind using GP models for benchmarking}
+\enquote{It has long been known that a single-layer fully-connected neural network with an i.i.d. prior over its parameters is equivalent to a Gaussian process (GP), in the limit of infinite network width. This correspondence enables exact Bayesian inference for infinite width neural networks on regression tasks by means of evaluating the corresponding GP}[\cite{lee2018deep}].Existence of such a relationship between GPs and Bayesian Neural Networks coupled with the ability of GPs to compute the predictive posterior distribution in a closed form qualifies them to act as the baseline for evaluating the considered set of uncertainty estimation methods.
+
 \section{Training details}
-\subsection{Dronet with steering angle dataset}
+\subsection{Dronet}
 In order to benchmark the considered uncertainty estimation methods(MCDO\_ADF and DER), a set of three Dronet models are used: 1. Vanilla version of Dronet 2. MCDO\_ADF version of dronet with dropout layers after convolution layers 3. Evidential version of Dronet which uses the evidential loss function. Training details for those variants are provided in upcoming sections.
 
 Choice of certain hyperparameter values remains unchanged for training all the three models and are listed in the table below.
 
-\begin{table}[h]
+\begin{table}[H]
 	\begin{tabular}{|l|l|}
 		\hline
 		\textbf{Hyperparameter} & \textbf{Value}                                                                                                                                                                                                                            \\ \hline
@@ -105,6 +115,7 @@ Choice of certain hyperparameter values remains unchanged for training all the t
 		Choice of optimizer                      & Adam                                                                                                                                                                                                                                                       \\ \hline
 		Initializers                             & \begin{tabular}[c]{@{}l@{}}Kaiming-normal for Conv2D in residual blocks,   \\ Xavier-uniform for Conv2D, linear layers in non-residual blocks, \\ Constant initialization for batch normalization layers\\ (weights with 1 and biases with 0)\end{tabular} \\ \hline
 	\end{tabular}
+\caption{Hyperparameter specifications for training Dronet}
 \end{table}
 
 
@@ -164,5 +175,19 @@ Similar to the case of Dronet, two variants of the simple network described in \
 \caption{Choice of hyperparameters for Neural nets used with 1D datasets}
 \end{table}
 
-
+\subsection{Gaussian Process models}
+The following table provides specifications of GP models used.
+\begin{table}[H]
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\textbf{Parameter}                                                                  & \textbf{Homoscedastic GP}                                                               & \textbf{Heteroscedastic GP}                                                                                                                  \\ \hline
+		Covariance function kernel                                                          & Matern kernel                                                                           & \begin{tabular}[c]{@{}l@{}}Two Squared-exponential kernels\\ as independent priors \\ for likelihood mean and observation noise\end{tabular} \\ \hline
+		Likelihood function                                                                 & Gaussian                                                                                & \begin{tabular}[c]{@{}l@{}}Heteroscedastic likelihood with \\ a Normal conditional distribution\end{tabular}                                 \\ \hline
+		Length scale initial value                                                          & 0.3                                                                                     & 1.0                                                                                                                                          \\ \hline
+		Optimizer                                                                           & \begin{tabular}[c]{@{}l@{}}Scipy(L-BFGS-B\\  based optimizer \\ in gpflow)\end{tabular} & Gradient descent + Adam optimizers                                                                                                           \\ \hline
+		Maximum iterations                                                                  & 100                                                                                     & 100                                                                                                                                          \\ \hline
+		\begin{tabular}[c]{@{}l@{}}Inducing points for variational\\ inference\end{tabular} & Not Applicable                                                                          & 20                                                                                                                                           \\ \hline
+	\end{tabular}
+\caption{Training details of Gaussian Process models}
+\end{table}
 

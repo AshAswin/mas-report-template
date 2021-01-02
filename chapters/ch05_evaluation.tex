@@ -3,7 +3,6 @@
 \begin{document}
     \chapter{Experimental Evaluation}
 \section{Metrics}
-\subsection{Kullback-Leiber Divergence}\label{sec_kl_div}
 \subsection{Root Mean Squared Error(RMSE)}
 Root Mean Squared Error (RMSE), measures the spread of distances between model predictions and their corresponding ground truth values. Alternatively, it can be explained as the standard deviation of prediction errors. RMSE is a well-known accuracy metric in regression problems. The metric is non-negative in nature with lower values indicating better model fit.
 \begin{equation}
@@ -33,7 +32,8 @@ NLL measures the goodness of fit of the approximated posterior distribution to t
 selection, it is not a reliable criteria for determining how well an approximate posterior aligns with the true posterior"\cite{yao2019quality}. This can be understood better with help of the illustration below.  
 
 \section{Predictive accuracy and uncertainty quality}
-\subsection{Quantitative comparison}
+\subsection{Udacity steering angle dataset}
+\subsubsection{Quantitative comparison}
 \begin{table}[h!]
 	\centering
 	\begin{tabular}{|c|c|c|c|c|c|}
@@ -59,11 +59,10 @@ selection, it is not a reliable criteria for determining how well an approximate
 	\caption{A plot depicting relationship between the MC sample count and RMSE during the MCDO\_ADF model inference}
 	\label{fig_mc_count_vs_rmse}
 \end{figure}
-\subsection{Qualitative comparison}
-In order to qualitatively compare predictive uncertainties outputted by both the models, test images corresponding to the highest and lowest values of uncertainty(aleatoric, epistemic and predictive) are taken into consideration and analyzed. The analysis is presented in the table below.
-\begin{table}[h!]
-\flushleft
-\begin{tabular}[ht]{|p{1.5cm}|p{2.3cm}|p{13.8cm}|}
+\subsubsection{Qualitative comparison}
+\begin{table}[H]
+\centering
+\begin{tabular}[H]{|p{1.5cm}|p{2.3cm}|p{13.5cm}|}
 \hline
 \textbf{Category}&\textbf{Method}&\textbf{Analysis}\\
 \hline
@@ -75,24 +74,158 @@ Epistemic&MCDO\_ADF&\begin{itemize}\item The method reports high values of epist
 \hline
 Epistemic&DER/Evidential&\begin{itemize}\item The method produces high values of model uncertainty for both images with unclear features and noise, similar to MCDO\_ADF.\item However, there is a difference between images reported with high values of epistemic uncertainty between MCDO\_ADF and evidential showing the fact that they both have different criteria for uncertainty estimation.\item The set of images reported with low values of epistemic uncertainty have a lot of similarities with that of ones with low-aleatoric variances.\end{itemize}\\
 \hline
-Total& MCDO\_ADF and DER/Evidential&\begin{itemize}\item The set of images reported with high/low values of predictive uncertainties by both the methods correspond to the ones with high/low values of their components(aleatoric and epistemic).\item This could be attributed to the fact that the predictive uncertainty is obtained as the sum of its components in both the methods.\end{itemize}\\
+Total& MCDO\_ADF and DER/Evidential& The set of images reported with high/low values of predictive uncertainties by both the methods correspond to the ones with high/low values of their components(aleatoric and epistemic)\\
 \hline
-
 \end{tabular}
-\caption{A qualitative comparison of uncertainty estimation methods when applied to Dronet}
+\caption{A qualitative comparison of uncertainty estimation methods}
 \label{tab_qualit_compare}
 \end{table}
-
 \end{document}
+\subsection{1D dataset}
+\begin{table}[H]
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		\textbf{\begin{tabular}[c]{@{}c@{}}Function\\ y=f(x)\end{tabular}} & \textbf{Metric} & \textbf{\begin{tabular}[c]{@{}c@{}}Homoscedastic\\ GP\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Heteroscedastic\\ GP\end{tabular}} & \textbf{Evidential} & \textbf{MCDO\_ADF}                    \\ \hline
+		\multirow{3}{*}{$y=\frac{sin(3x)}{3x}$}                            & NLL             & \textbf{-0.82}                                                      & -0.51                                                                 & \textit{0.57}                & 2.27                                  \\ \cline{2-6} 
+		& RMSE            & \textbf{0.07}                                                       & 0.08                                                                  & 0.40                & \textit{0.39}                                  \\ \cline{2-6} 
+		& EVA             & \textbf{0.94}                                                       & 0.91                                                                  & \textit{-0.29 }              & -0.43                                 \\ \hline
+		\multirow{3}{*}{$y=0.1x^3$}                                        & NLL             & \textbf{-2.44}                                                      & -1.77                                                                 & -\textit{0.15}               & 1.11                                  \\ \cline{2-6} 
+		& RMSE            & \textbf{0.01}                                                 & 0.03                                                                  & 0.23                & \textit{0.11 }                                 \\ \cline{2-6} 
+		& EVA             & \textbf{0.99}                                                                & \textbf{0.99}                                                                  & \textbf{0.99}       & \textbf{0.99}                                  \\ \hline
+		\multirow{3}{*}{$y=-(1+x)sin(1.2x)$}                               & NLL             & \textbf{-1.02}                                                      & 1.91                                                                  & \textit{6.14}                & \textgreater{}\textgreater{}1(182049) \\ \cline{2-6} 
+		& RMSE            & 0.61                                                                & \textbf{0.15}                                                         & 2.68                & \textit{0.8}                                   \\ \cline{2-6} 
+		& EVA             & 0.94                                                                & \textbf{0.99}                                                         & \textit{-0.05}               & 0.87                                  \\ \hline
+	\end{tabular}
+	\caption{A quantitative comparison of uncertainty estimation methods on 1D datasets}
+	\label{tab_quant_compare1D}
+\end{table}
+\begin{itemize}
+	\item It can be inferred from the tabulation that Gaussian processes outperform the considered pair of uncertainty estimation methods in terms of every metric(values marked in bold). However, the pair GP models are included in this comparison only as a baseline.
+	\item When it comes to comparing DER with MCDO(italicized values correspond to better performance), the former performs better in terms of NLL and EVA while the latter has relatively lower values of RMSE, the measure of predictive accuracy.
+	\item Better performance of DER over MCDO\_ADF can be attributed to three important factors:
+	\begin{itemize}
+		\item Flexibility: The extent of confidence interval around a prediction estimated by a method.
+		\item Quality of model fit to data
+		\item Performance in Out-Of-Distribution regions(discussed more in the next section).
+	\end{itemize}
+	\item MCDO\_ADF suffers from high values of NLL (undesirable) in case of all the three functions due to lack of flexibility.
+\end{itemize}
+\subsubsection{Qualitative comparison}
+\begin{itemize}
+	\item As it can be witnessed from \ref{der_fn1},\ref{der_fn2} and \ref{der_fn3} DER provides a constant estimate for the value of aleatoric uncertainty similar to homoscedastic GP, which is desirable. 
+	\item The MCDO\_ADF technique  performs relatively better than DER in estimating epistemic uncertainties for fn\_1(refer \ref{mcdo_fn1}), while its performance plummets in the case of fn\_3(refer \ref{mcdo_fn3}) where it fails to report high values of uncertainty for the OOD region which results in a very high value of NLL.
+	\item The MCDO\_ADF variant of the neural network model performs better than its DER counterpart in modeling smoothness of functions. While in the case of GPs, the use of squared-exponential kernels as priors leads to better modeling of such functions.  
+	\item The success of homoscedastic GPs in modeling  aleatoric uncertainties can be attributed to constancy in variance of Gaussian distribution used for adding noise to input data generated from a given function. 
+	
+	
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/homo_fn1}
+		\caption{Homoscedastic GP on fn\_1: $y=\frac{sin(3x)}{3x}$}
+		\label{homo_fn1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/hetero_fn1}
+		\caption{Heteroscedastic GP on fn\_1: $y=\frac{sin(3x)}{3x}$}
+		\label{hetero_fn1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn1}
+		\caption{MCDO\_ADF on fn\_1: $y=\frac{sin(3x)}{3x}$}
+		\label{mcdo_fn1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/der_fn1}
+		\caption{DER on fn\_1: $y=\frac{sin(3x)}{3x}$}
+		\label{der_fn1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/homo_fn2}
+		\caption{Homoscedastic GP on fn\_2: $y=0.1x^3$}
+		\label{homo_fn2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/hetero_fn2}
+		\caption{Heteroscedastic GP on fn\_2: $y=0.1x^3$}
+		\label{hetero_fn2}
+	\end{subfigure}
+\end{figure}
+
+\begin{figure}[H]\ContinuedFloat
+	\centering
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn2}
+		\caption{MCDO\_ADF on fn\_2: $y=0.1x^3$}
+		\label{mcdo_fn2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/der_fn2}
+		\caption{DER on fn\_2: $y=0.1x^3$}
+		\label{der_fn2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/homo_fn3}
+		\caption{Homoscedastic GP on fn\_3: $y=-(1+x)sin(1.2x)$}
+		\label{homo_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/hetero_fn3}
+		\caption{Heteroscedastic GP on fn\_3: $y=-(1+x)sin(1.2x)$}
+		\label{hetero_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn3}
+		\caption{MCDO\_ADF on fn\_3: $y=-(1+x)sin(1.2x)$}
+		\label{mcdo_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{toy_dataset/der_fn3}
+		\caption{DER on fn\_3: $y=-(1+x)sin(1.2x)$}
+		\label{der_fn3}
+	\end{subfigure}
+	\hfill
+	\caption{Plots depicting application of uncertainty estimation methods on 1D datasets}
+	\label{fig_1d_functions}
+\end{figure}
+\end{document}
+
 \section{Out-Of-Distribution(OOD) testing}
-One of the important uses for having an estimate of uncertainty associated with a Neural Net model's output is "selective prediction". This means that the confidence estimate can be used to determine the correctness of an output and in turn decide whether to consider it for further processing/decision-making or not. It is crucial for the uncertainty estimation method to produce a higher value of uncertainty when the model faces test samples from an unknown data distribution. This section evaluates the considered uncertainty estimation methods on their response to out-of-distribution inputs.
+One of the important uses for having an estimate of uncertainty associated with a Neural Net model's output is \enquote{selective prediction}. This means that the confidence estimate can be used to determine the correctness of an output and in turn decide whether to consider it for further processing/decision-making or not. It is crucial for the uncertainty estimation method to produce a higher value of uncertainty when the model faces test samples from an unknown data distribution. This section evaluates the considered uncertainty estimation methods on their response to out-of-distribution inputs.
 \subsection {Response to Out-Of-Distribution data}
-\subsection{Robustness to adversarial attacks}
+\subsubsection{Steering angle dataset}
+
+\subsubsection{1D datasets}
+Train and test data ranges of the set of 1D functions are set in such a way that the Out-Of-Distribution (OOD) regions lie both in-between and on either sides of training data ranges. Owing to the smooth nature of target functions and use of squared exponential kernels GPs perform well both in terms of predictive accuracy and NLL(uncertainty estimation quality) in OOD areas. Both the considered uncertainty estimation methods do not perform well in predicting the mean and estimating uncertainties in OOD regions of fn\_3. Due to narrow confidence intervals proposed by MCDO\_ADF in this region, the method performs poorly in terms of NLL. In the case of fn\_2, predictions of both the methods remain close to the target. The MCDO\_ADF method outperforms DER by reporting a high value of epistemic uncertainty for OOD regions in fn\_1. 
+\subsection{Response to adversarial attacks(for steering angle dataset only)}
 Adversarial examples are malicious inputs designed to fool machine learning models[\cite{kurakin2016adversarial}]. Such data samples can be considered as an extreme case of Out-Of-Distribution as they are synthesized by perturbing inputs in an adversarial fashion to cause maximum error on the model prediction. An uncertainty estimation method needs to be capable of identifying and reporting an adversarially perturbed input data sample by producing a high value of uncertainty. 
 
-In order to evaluate the robustness of the considered uncertainty estimation methods, samples from training data distribution are perturbed using the FGSM(Fast Gradient Sign Method)\cite{goodfellow2015explaining} and fed to the trained ResNet-8 model. Changes in the estimated values of predictive uncertainty and RMSE with respect to increasing levels of perturbation(denoted by $\epsilon$) between 0 and 0.1 for a given image are plotted in the graphs shown in the figure\ref{fig_adv_analysis_single}. A set of images produced from a given image subject to different levels of adversarial perturbations is shown in the figure\ref{fig_adv_example}.
+In order to evaluate responses of the considered uncertainty estimation methods, samples from training data distribution are perturbed using the FGSM(Fast Gradient Sign Method)\cite{goodfellow2015explaining} and fed to models. A set of images produced from a given image subject to different levels of adversarial perturbations is shown in the figure\ref{fig_adv_example}. Adversarial images fed to a given Dronet model variant are synthesized using perturbations generated by its own.  
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.19\textwidth}
 		\centering
@@ -128,130 +261,54 @@ In order to evaluate the robustness of the considered uncertainty estimation met
 		\caption{$\epsilon=0.10$}
 		\label{fig:five over x}
 	\end{subfigure}
-	\caption{Images depicting increasing levels of Adversarial noise}
+	\caption{Increasing levels of adversarial noise}
 	\label{fig_adv_example}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.40]{adversarial_analysis_single}
-	\caption{(a) Plot depicting the change in RMSE with respect to increase in adversarial perturbations for a single image (b) Plot depicting the change in predictive uncertainty with respect to increase in adversarial perturbations for a single image}
-	\label{fig_adv_analysis_single}
+	\includegraphics[scale=0.40]{adversarial/adv_plots}
+	\caption{Plots of $\epsilon$(adversarial perturbations) against uncertainties and RMSE}
+	\label{fig_adv_analysis}
 \end{figure}
 
 
 
-It can be inferred from the plot that the increase in values of RMSE of the model using DER is consistent with the increase in perturbation levels, while a lot of variations can be observed in the case of MCDO\_ADF variant. In the case of relationship between $\epsilon$ and predictive uncertainty, the predictive uncertainties estimated by DER remains almost constant in the interval between $\epsilon = $ but increase steadily then after. Similar to the case of $\epsilon$ Vs RMSE, a lot of fluctuations can be observed in the uncertainty estimates produced for different levels of $\epsilon$.
+Plots in the figure \ref{fig_adv_analysis} depict the impact of increasing perturbation levels(denoted by $\epsilon$) on average values of uncertainty estimates and RMSE values respectively, for both model variants. The following can be inferred from the set of plots:
+\begin{itemize}
+	\item The existence of linear relationships between $\epsilon$ , RMSE and total variance respectively is desirable and indicates that the MCDO\_ADF model variant is better calibrated(alignment between error and uncertainty) than its DER counterpart.
+	\item  Though aleatoric uncertainties estimated by DER are more sensitive to increasing levels of $\epsilon$ than MCDO\_ADF, the method's response is non-linear in nature.
+	\item  Epistemic uncertainty forms the major component of total uncertainty estimated by MCDO\_ADF while the aleatoric component dominates in the case of DER.
+\end{itemize}
+\subsubsection{Spearman's correlation analysis}
 
-\begin{figure}[h]
-	\centering
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/homo_fn1}
-	\caption{$\epsilon=0$}
-	\label{fig:y equals x}
+Spearman's rank correlation (often denoted by $\rho$) is a measure of statistical dependence between a pair of variables. Intuitively $\rho$ indicates the strength and direction of association between two ranked variables. $\rho$ varies between -1 and 1. The direction of association is indicated by sign of $\rho$ while its magnitude indicates the strength of correlation between the variable pair.
+
+In the context of analyzing response of uncertainty estimation methods to adversarial attacks, Spearman's rank correlation coefficient is computed for pairs of following variables : $\epsilon$, absolute deviation of a prediction from its corresponding ground truth value, aleatoric, epistemic and total uncertainties. Though Pearson's correlation coefficient is a common choice for correlation analysis, there are two reasons to prefer Spearman's correlation for this analysis:
+\begin{itemize}
+	\item Pearson's correlation measure applies to normally distributed variables. As no assumptions are made on underlying distributions of the considered set of variables Spearman's correlation coefficient is preferred.
+	\item Spearman's coefficient measures correlation between a pair of ranked variables. As this analysis focuses on effects of increasing levels of $\epsilon$ (a ranked variable) on other variables, the measure becomes an apt choice.
+\end{itemize} 
+Spearman's correlation coefficients are arranged in form of a symmetric matrix (indices denoting variables) separately for both MCDO\_ADF and DER model variants as shown in the figure below.
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.55\textwidth}
+		\includegraphics[width=\textwidth]{adversarial/evi_correlation_matrix}
+		\caption{Spearman's correlation matrix for DER}
+		\label{fig:five over x}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/hetero_fn1}
-	\caption{$\epsilon=0.06$}
-	\label{fig:five over x}
+	\begin{subfigure}[b]{0.55\textwidth}
+		\includegraphics[width=\textwidth]{adversarial/mcdo_adf_correlation_matrix}
+		\caption{Spearman's correlation matrix for MCDO\_ADF}
+		\label{fig:five over x}
 	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn1}
-	\caption{$\epsilon=0.02$}
-	\label{fig:three sin x}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/der_fn1}
-	\caption{$\epsilon=0.06$}
-	\label{fig:five over x}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/homo_fn2}
-	\caption{$\epsilon=0.06$}
-	\label{fig:five over x}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/hetero_fn2}
-	\caption{$\epsilon=0.06$}
-	\label{fig:five over x}
-	\end{subfigure}
+	\caption{Spearman's correlation heatmaps}
+	\label{fig_correlation_analysis}
 \end{figure}
+The following can be inferred from the computed correlation coefficient matrices:
+\begin{itemize}
+	\item MCDO\_ADF shows relatively a stronger correlation between $\epsilon$ and other variables of interest than DER. This indicates a higher-level of alignment between $\epsilon$ and uncertainties estimated by MCDO\_ADF, which is desirable.
+	\item A stronger association exists between epistemic and aleatoric components of uncertainty estimated by DER ($\rho = 0.97$) than MCDO\_ADF($\rho = 0.89$). This can be attributed to DER's ability to relate the pair of uncertainty components.
+	\item The dominance of aleatoric and epistemic uncertainty components in total uncertainties estimated by DER and MCDO\_ADF respectively can observed in their corresponding correlation coefficients. This aligns with inferences obtained from \ref{fig_adv_analysis}. 
+\end{itemize}
 
-\begin{figure}[h]\ContinuedFloat
-	\centering
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn2}
-	\caption{$\epsilon=0.06$}
-	\label{fig:five over x}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/der_fn2}
-	\caption{$\epsilon=0.06$}
-	\label{fig:five over x}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/homo_fn3}
-	\caption{$\epsilon=0.06$}
-	\label{fig:five over x}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/hetero_fn3}
-	\caption{$\epsilon=0.06$}
-	\label{fig:five over x}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn3}
-	\caption{$\epsilon=0.06$}
-	\label{fig:five over x}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{toy_dataset/der_fn3}
-	\caption{$\epsilon=0.06$}
-	\label{fig:five over x}
-	\end{subfigure}
-	\hfill
-	\caption{Images depicting increasing levels of Adversarial noise}
-	\label{fig_adv_example}
-\end{figure}
-
-% Please add the following required packages to your document preamble:
-% \usepackage{multirow}
-\begin{table}[H]
-	\begin{tabular}{|c|c|c|c|c|c|}
-		\hline
-		\textbf{\begin{tabular}[c]{@{}c@{}}Function\\ y=f(x)\end{tabular}} & \textbf{Metric} & \textbf{\begin{tabular}[c]{@{}c@{}}Homoscedastic\\ GP\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Heteroscedastic\\ GP\end{tabular}} & \textbf{Evidential} & \textbf{MCDO\_ADF}                    \\ \hline
-		\multirow{3}{*}{$y=\frac{sin(3x)}{3x}$}                            & NLL             & \textbf{-0.82}                                                      & -0.51                                                                 & 0.57                & 2.27                                  \\ \cline{2-6} 
-		& RMSE            & \textbf{0.07}                                                       & 0.08                                                                  & 0.40                & 0.39                                  \\ \cline{2-6} 
-		& EVA             & \textbf{0.94}                                                       & 0.91                                                                  & -0.29               & -0.43                                 \\ \hline
-		\multirow{3}{*}{$y=0.1x^3$}                                        & NLL             & \textbf{-2.44}                                                      & -1.77                                                                 & -0.15               & 1.11                                  \\ \cline{2-6} 
-		& RMSE            & \textbf{$\sim$0.00}                                                 & 0.03                                                                  & 0.23                & 0.11                                  \\ \cline{2-6} 
-		& EVA             & 0.99                                                                & 0.99                                                                  & \textbf{0.99}       & 0.99                                  \\ \hline
-		\multirow{3}{*}{$y=-(1+x+sin(1.2x)$}                               & NLL             & \textbf{-1.02}                                                      & 1.91                                                                  & 6.14                & \textgreater{}\textgreater{}1(182049) \\ \cline{2-6} 
-		& RMSE            & 0.61                                                                & \textbf{0.15}                                                         & 2.68                & 0.8                                   \\ \cline{2-6} 
-		& EVA             & 0.94                                                                & \textbf{0.99}                                                         & -0.05               & 0.87                                  \\ \hline
-	\end{tabular}
-\end{table}
-
-\end{document}
