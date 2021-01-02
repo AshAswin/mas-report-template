@@ -34,21 +34,24 @@ selection, it is not a reliable criteria for determining how well an approximate
 \section{Predictive accuracy and uncertainty quality}
 \subsection{Udacity steering angle dataset}
 \subsubsection{Quantitative comparison}
-\begin{table}[h!]
+
+\begin{table}[H]
 	\centering
-	\begin{tabular}{|c|c|c|c|c|c|}
+	\begin{tabular}{|c|c|c|c|}
 		\hline
-		\multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{RMSE}} & \multirow{2}{*}{\textbf{EVA}} & \multicolumn{3}{c|}{\textbf{NLL}}                             \\ \cline{4-6} 
-		&                                &                               & \textbf{Epistemic} & \textbf{Aleatoric} & \textbf{Predictive} \\ \hline
-		Vanilla Dronet                  & 0.034                          & 0.98                          & NA                 & NA                 & NA                  \\ \hline
-		MCDO\_ADF Dronet                & 0.15                           & 0.68                          & -0.71              & 7.51               & -0.74               \\ \hline
-		Evidential Dronet               & \textbf{0.022}                 & \textbf{0.99}                 & \textbf{-2.03}     & \textbf{-1}        & \textbf{-0.94}      \\ \hline
+		\multirow{2}{*}{\textbf{Model}}                                                                             & \multirow{2}{*}{\textbf{RMSE}}      & \multirow{2}{*}{\textbf{EVA}} & \multirow{2}{*}{\textbf{NLL}} \\
+		&                                     &                               &                               \\ \hline
+		Vanilla Dronet                                                                                              & 0.034                               & 0.98                          & NA                            \\ \hline
+		MCDO\_ADF Dronet                                                                                            & 0.151                                & \textbf{0.68}                 & -0.74                         \\ \hline
+		\begin{tabular}[c]{@{}c@{}}Evidential Dronet\\ (squared version of loss)\end{tabular}                       & 0.022                               & 0.99                          & \textbf{-0.94}                \\ \hline
+		\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Evidential Dronet\\ (L1 norm version of loss)\end{tabular}} & \multicolumn{1}{l|}{\textbf{ 0.021}} & \multicolumn{1}{l|}{0.99}     & \multicolumn{1}{l|}{0.31}     \\ \hline
 	\end{tabular}
 	\caption{A quantitative comparison of uncertainty estimation methods when applied to Dronet}
-	\label{tab_quant_compare}
+\label{tab_quant_compare}
 \end{table}
+
 \begin{itemize}
-	\item It can be inferred that Evidential Dronet outperforms the other two models in terms of both predictive accuracy and quality of uncertainty estimation.
+	\item It can be inferred that Evidential Dronet outperforms the other two models in terms of both predictive accuracy and quality of uncertainty estimation(NLL).
 	\item In the case of predictive accuracy expressed in terms of RMSE, Evidential Dronet outperforms the Vanilla variant only by a slight margin. However, difference in RMSE between Evidential and MCDO\_ADF variants is considerable. This could be partly attributed to the fact that both predictions and uncertainty estimates outputted by the MCDO\_ADF variant depend on the count of Monte-Carlo(MC) samples considered. Higher the value of MC samples better the model's performance(refer figure \ref{fig_mc_count_vs_rmse}).  However, this holds true only un till a particular value of MC samples. For this experiment, 20 MC samples are considered. 
 	\item The relationship between MC sample counts and predictive accuracy holds good for the Explained Variance (EVA) measure as well.
 	\item The quality of predictive uncertainty estimated by the Evidential Dronet expressed in terms of Negative-Log-Likelihood (NLL) is better than the MCDO\_ADF variant. This intuitively means that the former technique is able to determine parameters of the distribution in which likelihood of finding ground truth labels is higher than in the distribution outputted by the latter.
