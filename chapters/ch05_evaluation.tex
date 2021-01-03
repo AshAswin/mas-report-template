@@ -12,9 +12,9 @@ Here $\hat{y}$,$y$ and $N$ represent ground truth labels, predictions and number
 \subsection{Explained Variance(EVA)}
 The Explained Variance (EVA) is a measure of a regressor's ability to capture variance(variation) of given data. The metric can be computed with the following expression:
 \begin{equation}
-	\mathbf{EVA} = \frac{Variance(\hat{y}-y)}{Variance(\hat{y})}
+	\mathbf{EVA} = 1-\frac{Variance(\hat{y}-y)}{Variance(\hat{y})}
 \end{equation}
-Here $\hat{y}$,$y$ represent ground-truth labels and predictions respectively. The numerator term denotes variance of residuals whereas the denominator denotes the underlying variance in ground-truth labels. For an ideal regressor, the value of EVA equals 0.
+Here $\hat{y}$,$y$ represent ground-truth labels and predictions respectively. The numerator term denotes variance of residuals whereas the denominator denotes the underlying variance in ground-truth labels. For an ideal regressor, the value of EVA equals 1.
 \subsection{Negative-Log-Likelihood(NLL)}
 In this research work,the Negative-Log-Likelihood(NLL) metric is used compare performance of uncertainty estimation methods. NLL for a given pair of prediction and uncertainty can be computed as follows
 \begin{itemize}
@@ -28,8 +28,8 @@ In this research work,the Negative-Log-Likelihood(NLL) metric is used compare pe
 Here $\hat{y}$,$y$,$\sigma^2$ and $N$ represent ground truth labels, predictions, predictive uncertainty and number of data points respectively.
 Lower the value of NLL better the performance of an uncertainty estimation method associated with it. However, the value of NLL highly depends on the number and choice of test points used for evaluation. Therefore, the metric can be used to compare performance of uncertainty estimation methods only when the same data set is used for their evaluation.
 \subsubsection{Limitations of NLL}
-NLL measures the goodness of fit of the approximated posterior distribution to the true function's mean(ground truth). The metric fails to evaluate fidelity of the approximated posterior distribution. Therefore, NLL "may be a good criteria for model
-selection, it is not a reliable criteria for determining how well an approximate posterior aligns with the true posterior"\cite{yao2019quality}. This can be understood better with help of the illustration below.  
+NLL measures the goodness of fit of the approximated posterior distribution to the true function's mean(ground truth). The metric fails to evaluate fidelity of the approximated posterior distribution. Therefore, NLL \enquote{may be a good criteria for model
+selection, it is not a reliable criteria for determining how well an approximate posterior aligns with the true posterior}\cite{yao2019quality}. This can be understood better with help of the illustration below.  
 
 \section{Predictive accuracy and uncertainty quality}
 \subsection{Udacity steering angle dataset}
@@ -42,9 +42,9 @@ selection, it is not a reliable criteria for determining how well an approximate
 		\multirow{2}{*}{\textbf{Model}}                                                                             & \multirow{2}{*}{\textbf{RMSE}}      & \multirow{2}{*}{\textbf{EVA}} & \multirow{2}{*}{\textbf{NLL}} \\
 		&                                     &                               &                               \\ \hline
 		Vanilla Dronet                                                                                              & 0.034                               & 0.98                          & NA                            \\ \hline
-		MCDO\_ADF Dronet                                                                                            & 0.151                                & \textbf{0.68}                 & -0.74                         \\ \hline
-		\begin{tabular}[c]{@{}c@{}}Evidential Dronet\\ (squared version of loss)\end{tabular}                       & 0.022                               & 0.99                          & \textbf{-0.94}                \\ \hline
-		\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Evidential Dronet\\ (L1 norm version of loss)\end{tabular}} & \multicolumn{1}{l|}{\textbf{ 0.021}} & \multicolumn{1}{l|}{0.99}     & \multicolumn{1}{l|}{0.31}     \\ \hline
+		MCDO\_ADF Dronet                                                                                            & 0.151                                & 0.68                 & -0.74                         \\ \hline
+		\begin{tabular}[c]{@{}c@{}}Evidential Dronet\\ (squared version of loss)\end{tabular}                       & 0.022                               & \bf{0.99}                          & \textbf{-0.94}                \\ \hline
+		\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Evidential Dronet\\ (L1 norm version of loss)\end{tabular}} & \multicolumn{1}{l|}{\textbf{ 0.021}} & \multicolumn{1}{l|}{\textbf{0.99}}     & \multicolumn{1}{l|}{0.31}     \\ \hline
 	\end{tabular}
 	\caption{A quantitative comparison of uncertainty estimation methods when applied to Dronet}
 \label{tab_quant_compare}
@@ -62,10 +62,10 @@ selection, it is not a reliable criteria for determining how well an approximate
 	\caption{A plot depicting relationship between the MC sample count and RMSE during the MCDO\_ADF model inference}
 	\label{fig_mc_count_vs_rmse}
 \end{figure}
+
 \subsubsection{Qualitative comparison}
-\begin{table}[H]
-\centering
-\begin{tabular}[H]{|p{1.5cm}|p{2.3cm}|p{13.5cm}|}
+\begin{table}[h]
+\begin{tabular}[h]{|p{1.5cm}|p{2.3cm}|p{13.5cm}|}
 \hline
 \textbf{Category}&\textbf{Method}&\textbf{Analysis}\\
 \hline
@@ -84,6 +84,7 @@ Total& MCDO\_ADF and DER/Evidential& The set of images reported with high/low va
 \label{tab_qualit_compare}
 \end{table}
 \end{document}
+
 \subsection{1D dataset}
 \begin{table}[H]
 	\begin{tabular}{|c|c|c|c|c|c|}
@@ -102,6 +103,7 @@ Total& MCDO\_ADF and DER/Evidential& The set of images reported with high/low va
 	\caption{A quantitative comparison of uncertainty estimation methods on 1D datasets}
 	\label{tab_quant_compare1D}
 \end{table}
+
 \begin{itemize}
 	\item It can be inferred from the tabulation that Gaussian processes outperform the considered pair of uncertainty estimation methods in terms of every metric(values marked in bold). However, the pair GP models are included in this comparison only as a baseline.
 	\item When it comes to comparing DER with MCDO(italicized values correspond to better performance), the former performs better in terms of NLL and EVA while the latter has relatively lower values of RMSE, the measure of predictive accuracy.
@@ -113,7 +115,7 @@ Total& MCDO\_ADF and DER/Evidential& The set of images reported with high/low va
 	\end{itemize}
 	\item MCDO\_ADF suffers from high values of NLL (undesirable) in case of all the three functions due to lack of flexibility.
 \end{itemize}
-\subsubsection{Qualitative comparison}
+\subsubsection{Qualitative comparison}\label{sec_qual_comparison}
 \begin{itemize}
 	\item As it can be witnessed from \ref{der_fn1},\ref{der_fn2} and \ref{der_fn3} DER provides a constant estimate for the value of aleatoric uncertainty similar to homoscedastic GP, which is desirable. 
 	\item The MCDO\_ADF technique  performs relatively better than DER in estimating epistemic uncertainties for fn\_1(refer \ref{mcdo_fn1}), while its performance plummets in the case of fn\_3(refer \ref{mcdo_fn3}) where it fails to report high values of uncertainty for the OOD region which results in a very high value of NLL.
@@ -214,13 +216,196 @@ Total& MCDO\_ADF and DER/Evidential& The set of images reported with high/low va
 	\caption{Plots depicting application of uncertainty estimation methods on 1D datasets}
 	\label{fig_1d_functions}
 \end{figure}
-\end{document}
+
 
 \section{Out-Of-Distribution(OOD) testing}
 One of the important uses for having an estimate of uncertainty associated with a Neural Net model's output is \enquote{selective prediction}. This means that the confidence estimate can be used to determine the correctness of an output and in turn decide whether to consider it for further processing/decision-making or not. It is crucial for the uncertainty estimation method to produce a higher value of uncertainty when the model faces test samples from an unknown data distribution. This section evaluates the considered uncertainty estimation methods on their response to out-of-distribution inputs.
 \subsection {Response to Out-Of-Distribution data}
 \subsubsection{Steering angle dataset}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{noise/original}
+	\caption{Original Image}
+	\label{fig_original_noise}
+	\hfill
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/dark_0}
+		\caption{darkness\_coeff = 0.1}
+		\label{mcdo_fn2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/dark_2}
+		\caption{darkness\_coeff = 0.3}
+		\label{der_fn2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/dark_4}
+		\caption{darkness\_coeff = 0.5}
+		\label{homo_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/dark_6}
+		\caption{darkness\_coeff = 0.7}
+		\label{hetero_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/dark_8}
+		\caption{darkness\_coeff = 0.9}
+		\label{mcdo_fn3}
+	\end{subfigure}
+	\hfill
+	\label{fig_noise_dark}
+\end{figure}
+\begin{figure}[H]\ContinuedFloat
+	\centering
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/fog_0}
+		\caption{fog\_coeff = 0.1}
+		\label{mcdo_fn2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/fog_2}
+		\caption{fog\_coeff = 0.3}
+		\label{der_fn2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/fog_4}
+		\caption{fog\_coeff = 0.5}
+		\label{homo_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/fog_6}
+		\caption{fog\_coeff = 0.7}
+		\label{hetero_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/fog_8}
+		\caption{fog\_coeff = 0.9}
+		\label{mcdo_fn3}
+	\end{subfigure}
+	\hfill
+	%\caption{A subset of synthesized images introducing increasing levels of fog}
+	\label{fig_noise_fog}
+\end{figure}
+\begin{figure}[H]\ContinuedFloat
+	\centering
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/snow_0}
+		\caption{snow\_coeff = 0.1}
+		\label{mcdo_fn2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/snow_2}
+		\caption{snow\_coeff = 0.3}
+		\label{der_fn2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/snow_4}
+		\caption{snow\_coeff = 0.5}
+		\label{homo_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/snow_6}
+		\caption{snow\_coeff = 0.7}
+		\label{hetero_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/snow_8}
+		\caption{snow\_coeff = 0.9}
+		\label{mcdo_fn3}
+	\end{subfigure}
+	\hfill
+	\caption{A subset of synthesized images introducing increasing levels of darkness, fog and snow}
+	\label{fig_noise_fog}
+\end{figure}
 
+In the qualitative comparison(\ref{sec_qual_comparison}) of methods on the steering angle data set, the relationship between uncertainty estimates and factors such as presence of blur, glare, sun-flare and illumination was discussed. In this section, the speculated relationship is validated. 
+
+Using image processing techniques, three sets of images are generated by introducing fog, snow-like patterns, and darkness to a noise-less image(\ref{fig_original_noise}) chosen from the steering angle dataset. These images are fed as inputs to both MCDO\_ADF and DER model variants and  responses of their respective uncertainty estimation methods are evaluated. 
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/dark-uncertainty}
+		\caption{Levels of darkness Vs Total uncertainty}
+		\label{mcdo_fn2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/dark-error}
+		\caption{Levels of darkness Vs Absolute deviation}
+		\label{der_fn2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/fog-uncertainty}
+		\caption{Levels of fog Vs Total uncertainty}
+		\label{homo_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/fog-error}
+		\caption{Levels of fog Vs Absolute deviation}
+		\label{hetero_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{noise/snow-uncertainty}
+		\caption{Levels of snow Vs Total uncertainty}
+		\label{mcdo_fn3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{noise/snow-error}
+	\caption{Levels of snow Vs Absolute deviation}
+	\label{mcdo_fn3}
+	\end{subfigure}
+	\hfill
+	\caption{Response to Out-Of-Distribution images (steering angle dataset)}
+	\label{fig_noise_fog}
+\end{figure}
+\subsubsection{Analysis}
+\begin{itemize}
+	\item Darkness: Increasing levels of darkness almost does not have any impact on total uncertainty estimated by DER. While an increase in uncertainty estimates of MCDO\_ADF can be observed for initial levels of darkness the trend do not remain for higher values which makes the method's response undesirable. When it comes to predictive error, absolute deviation values of the DER model variant is better aligned with increasing levels of darkness than its MCDO\_ADF counterpart. 
+	\item Fog: Though exist few inconsistencies, MCDO\_ADF's estimates of total uncertainty are better aligned with increasing levels of fog than DER. The same holds true for the relationship between fog levels and predictive error as well.
+	\item Snow: While DER's response in terms of uncertainty estimates remains almost constant to changes in levels of snow, a peculiar trend can be observed in MCDO\_ADF's output that the values of uncertainty decrease with increase in snow levels. There does not exist a strong correlation between the levels of snow and predictive error values corresponding to both the model variants. 
+\end{itemize}
+Except for the case of images with different levels of fog where MCDO\_ADF shows a desirable response, any significant relationship between the considered set of variables could not be established, in the other two cases. Observations such as unchanging values of uncertainty estimated by DER for increasing levels of fog and snow and existence alignment between uncertainty estimates and predictive error of the DER model variant in the case of dark images, show that factors such as model calibration and invariance of a model to a feature have a role to play. 
 \subsubsection{1D datasets}
 Train and test data ranges of the set of 1D functions are set in such a way that the Out-Of-Distribution (OOD) regions lie both in-between and on either sides of training data ranges. Owing to the smooth nature of target functions and use of squared exponential kernels GPs perform well both in terms of predictive accuracy and NLL(uncertainty estimation quality) in OOD areas. Both the considered uncertainty estimation methods do not perform well in predicting the mean and estimating uncertainties in OOD regions of fn\_3. Due to narrow confidence intervals proposed by MCDO\_ADF in this region, the method performs poorly in terms of NLL. In the case of fn\_2, predictions of both the methods remain close to the target. The MCDO\_ADF method outperforms DER by reporting a high value of epistemic uncertainty for OOD regions in fn\_1. 
 \subsection{Response to adversarial attacks(for steering angle dataset only)}
@@ -314,4 +499,4 @@ The following can be inferred from the computed correlation coefficient matrices
 	\item A stronger association exists between epistemic and aleatoric components of uncertainty estimated by DER ($\rho = 0.97$) than MCDO\_ADF($\rho = 0.89$). This can be attributed to DER's ability to relate the pair of uncertainty components.
 	\item The dominance of aleatoric and epistemic uncertainty components in total uncertainties estimated by DER and MCDO\_ADF respectively can observed in their corresponding correlation coefficients. This aligns with inferences obtained from \ref{fig_adv_analysis}. 
 \end{itemize}
-
+\end{document}

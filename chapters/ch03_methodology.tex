@@ -24,7 +24,7 @@ The Udacity steering angle dataset (available in \cite{udacity_dataset}) consist
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.35]{steerdataset-samples}
-	\caption{Sample images from the Udacity steering angle dataset. Image source: }
+	\caption{Sample images from the Udacity steering angle dataset. Image source: Udacity steering angle dataset}
 	\label{fig_steer_data_samples}
 \end{figure}
 
@@ -76,10 +76,10 @@ A zero-mean Gaussian noise is added to training data of all three functions, wit
 \subsection{Dronet}
 Dronet, a residual convolutional network architecture is used for experiments conducted on the steering angle dataset. The Neural Network is primarily designed to safely navigate a drone by performing the tasks of steering angle prediction(regression) and collision detection(binary classification). However, for the experiments conducted in this research work the collision detection output is not required and therefore its corresponding output branch in the Neural Networks output layer is discarded. Figure \ref{fig_resnet8} depicts Dronet's architecture.
 
-The model used for experiments takes a gray-scale input of size 200x200 and propagates it through a pair of convolution and max-pooling layers, three residual blocks, a dropout layer, a ReLU activation and finally a fully-connected(fc) layer which outputs predicted steering angles. When it comes to integrating MCDO\_ADF(described in \ref{general_framework}) with Dronet, new dropout layers are introduced before every convolutional layer at the test time. On the other hand, DER (described in \ref{der}) is integrated to Dronet by introducing three more output branches in the last fc layer for outputting parameters of the evidential distribution (described in \ref{sec_evidential_dist}).
+The model used for experiments takes a gray-scale input of size 200x200 and propagates it through a pair of convolution and max-pooling layers, three residual blocks, a dropout layer, a ReLU activation and finally a fully-connected(fc) layer which outputs predicted steering angles. When it comes to integrating MCDO\_ADF(described in \cite{general_framework}) with Dronet, new dropout layers are introduced before every convolutional layer at the test time. On the other hand, DER (described in \ref{der}) is integrated to Dronet by introducing three more output branches in the last fc layer for outputting parameters of the evidential distribution (described in \ref{sec_evidential_dist}).
 \begin{figure}
 	\includegraphics[scale=0.30]{resnet8}
-	\caption{(a) Dronet architecture (b) Structure of every residual block . Collision classification output (bounded by the red box) is discarded and the steering angle prediction branch(bounded by the green box) is retained for this experiment.  Image source: }
+	\caption{(a) Dronet architecture (b) Structure of every residual block . Collision classification output (bounded by the red box) is discarded and the steering angle prediction branch(bounded by the green box) is retained for this experiment.  Image source: [\cite{loquercio2018dronet}] }
 	\label{fig_resnet8}
 \end{figure}
 \subsection{Neural Network for 1D datasets}\label{1D_net}
