@@ -29,7 +29,59 @@ Here $\hat{y}$,$y$,$\sigma^2$ and $N$ represent ground truth labels, predictions
 Lower the value of NLL better the performance of an uncertainty estimation method associated with it. However, the value of NLL highly depends on the number and choice of test points used for evaluation. Therefore, the metric can be used to compare performance of uncertainty estimation methods only when the same data set is used for their evaluation.
 \subsubsection{Limitations of NLL}
 NLL measures the goodness of fit of the approximated posterior distribution to the true function's mean(ground truth). The metric fails to evaluate fidelity of the approximated posterior distribution. Therefore, NLL \enquote{may be a good criteria for model
-selection, it is not a reliable criteria for determining how well an approximate posterior aligns with the true posterior}\cite{yao2019quality}. This can be understood better with help of the illustration below.  
+selection, it is not a reliable criteria for determining how well an approximate posterior aligns with the true posterior}\cite{yao2019quality}. 
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{nll/near_small}
+	\caption{Close prediction with low uncertainty}
+	\label{homo_fn3}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{nll/near_large}
+	\caption{Close prediction with high uncertainty}
+	\label{hetero_fn3}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{nll/far_small}
+	\caption{Far prediction with low uncertainty}
+	\label{mcdo_fn3}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{nll/far_large}
+	\caption{Far prediction with high uncertainty}
+	\label{der_fn3}
+\end{subfigure}
+\hfill
+\caption{Plots to explain effects of predictions and confidence bounds on NLL }
+\label{fig_1d_functions}
+\end{figure}
+
+
+
+
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		\multicolumn{1}{|c|}{\textbf{Case}}                                               & \multicolumn{1}{c|}{\textbf{NLL}} & \multicolumn{1}{c|}{\textbf{RMSE}} & \textbf{EVA} \\ \hline
+		\begin{tabular}[c]{@{}l@{}}Close prediction \\ with high uncertainty\end{tabular} & 1.04                              & 0.50                               & 0.99         \\ \hline
+		\begin{tabular}[c]{@{}l@{}}Close prediction \\ with low uncertainty\end{tabular}  & 87.46                             & 0.50                               & 0.99         \\ \hline
+		\begin{tabular}[c]{@{}l@{}}Far prediction \\ with high uncertainty\end{tabular}   & 4.05                              & 2.50                               & 0.99         \\ \hline
+		\begin{tabular}[c]{@{}l@{}}Far prediction \\ with low uncertainty\end{tabular}    & 2220.67                           & 2.50                               & 0.99         \\ \hline
+	\end{tabular}
+\caption{Different cases to describe the impact of prediction distance and uncertainty levels on metrics}
+\end{table}
+
 
 \section{Predictive accuracy and uncertainty quality}
 \subsection{Udacity steering angle dataset}
@@ -56,16 +108,16 @@ selection, it is not a reliable criteria for determining how well an approximate
 	\item The relationship between MC sample counts and predictive accuracy holds good for the Explained Variance (EVA) measure as well.
 	\item The quality of predictive uncertainty estimated by the Evidential Dronet expressed in terms of Negative-Log-Likelihood (NLL) is better than the MCDO\_ADF variant. This intuitively means that the former technique is able to determine parameters of the distribution in which likelihood of finding ground truth labels is higher than in the distribution outputted by the latter.
 \end{itemize}
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.5]{RMSE_T20}
 	\caption{A plot depicting relationship between the MC sample count and RMSE during the MCDO\_ADF model inference}
 	\label{fig_mc_count_vs_rmse}
 \end{figure}
-
+\pagebreak
 \subsubsection{Qualitative comparison}
-\begin{table}[h]
-\begin{tabular}[h]{|p{1.5cm}|p{2.3cm}|p{13.5cm}|}
+\begin{table}[H]
+\begin{tabular}[h]{|p{1.5cm}|p{2.3cm}|p{12.5cm}|}
 \hline
 \textbf{Category}&\textbf{Method}&\textbf{Analysis}\\
 \hline
@@ -499,4 +551,26 @@ The following can be inferred from the computed correlation coefficient matrices
 	\item A stronger association exists between epistemic and aleatoric components of uncertainty estimated by DER ($\rho = 0.97$) than MCDO\_ADF($\rho = 0.89$). This can be attributed to DER's ability to relate the pair of uncertainty components.
 	\item The dominance of aleatoric and epistemic uncertainty components in total uncertainties estimated by DER and MCDO\_ADF respectively can observed in their corresponding correlation coefficients. This aligns with inferences obtained from \ref{fig_adv_analysis}. 
 \end{itemize}
+
+\section{Evaluation summary}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Experiment}                                                                                          & \textbf{Metric}                                                                                  & \textbf{Better performer} \\ \hline
+		\multirow{3}{*}{\begin{tabular}[c]{@{}c@{}}Udacity steering angle \\ test dataset evaluation\end{tabular}}   & NLL                                                                                              & DER                       \\ \cline{2-3} 
+		& RMSE                                                                                             & DER                       \\ \cline{2-3} 
+		& EVA                                                                                              & DER                       \\ \hline
+		\multirow{2}{*}{1D datasets}                                                                                  & NLL                                                                                              & DER                       \\ \cline{2-3} 
+		& RMSE                                                                                             & MCDO\_ADF                 \\ \hline
+		\begin{tabular}[c]{@{}c@{}}Response to \\ adversarial attacks\end{tabular}                                   & \begin{tabular}[c]{@{}c@{}}Spearman's rank correlation\\ coefficient between \\perturbations and uncertainty\end{tabular} & MCDO\_ADF                 \\ \hline
+		\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Response to Out-Of-Distribution inputs\\ (1D datasets)\end{tabular}} & NLL                                                                                              & DER                       \\ \cline{2-3} 
+		& RMSE                                                                                             & MCDO\_ADF                 \\ \hline
+	\end{tabular}
+\caption{Table of conducted experiments and their results}
+\label{tab_eval_summary}
+\end{table}
+The above table summarizes results from the set of experiments conducted in this research work. It can be inferred that there does not exist a single clear winner which outperforms the other in every conducted experiment. However, when it comes to evaluating the pair of methods based on uncertainty estimation quality, measured in terms of NLL, DER outperforms MCDO\_ADF in both the datasets considered. This signifies the higher likelihood of ground truth's presence in distributions outputted by DER integrated models, than its MCDO\_ADF counterparts. MCDO\_ADF performs better in terms of RMSE, a measure of predictive accuracy on both datasets. This can be attributed to the use of multiple MC samples by MCDO\_ADF models to output their predictions.When it comes to analyzing the pair of methods on Out-Of-Distribution inputs, MCDO\_ADF's response is desirable when inputs are adversarially perturbed, while DER's uncertainty estimates are more reliable when a model encounters inputs that lie outside the training data distribution. 
+
 \end{document}
