@@ -32,43 +32,37 @@ NLL measures the goodness of fit of the approximated posterior distribution to t
 selection, it is not a reliable criteria for determining how well an approximate posterior aligns with the true posterior}\cite{yao2019quality}. 
 \begin{figure}[H]
 \centering
-\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{nll/near_small}
-	\caption{Close prediction with low uncertainty}
-	\label{homo_fn3}
-\end{subfigure}
-\hfill
-\begin{subfigure}[b]{0.4\textwidth}
+\begin{subfigure}[b]{0.2\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{nll/near_large}
 	\caption{Close prediction with high uncertainty}
-	\label{hetero_fn3}
+	\label{fig_1d_functions_nll0}
 \end{subfigure}
 \hfill
-\begin{subfigure}[b]{0.4\textwidth}
+\begin{subfigure}[b]{0.2\textwidth}
 	\centering
-	\includegraphics[width=\textwidth]{nll/far_small}
-	\caption{Far prediction with low uncertainty}
-	\label{mcdo_fn3}
+	\includegraphics[width=\textwidth]{nll/near_small}
+	\caption{Close prediction with low uncertainty}
+	\label{fig_1d_functions_nll1}
 \end{subfigure}
 \hfill
-\begin{subfigure}[b]{0.4\textwidth}
+\begin{subfigure}[b]{0.2\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{nll/far_large}
 	\caption{Far prediction with high uncertainty}
-	\label{der_fn3}
+	\label{fig_1d_functions_nll2}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.2\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{nll/far_small}
+	\caption{Far prediction with low uncertainty}
+	\label{fig_1d_functions_nll3}
 \end{subfigure}
 \hfill
 \caption{Plots to explain effects of predictions and confidence bounds on NLL }
-\label{fig_1d_functions}
+\label{fig_1d_functions_nll}
 \end{figure}
-
-
-
-
-
-
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|l|}
@@ -80,8 +74,9 @@ selection, it is not a reliable criteria for determining how well an approximate
 		\begin{tabular}[c]{@{}l@{}}Far prediction \\ with low uncertainty\end{tabular}    & 2220.67                           & 2.50                               & 0.99         \\ \hline
 	\end{tabular}
 \caption{Different cases to describe the impact of prediction distance and uncertainty levels on metrics}
+\label{tab_nll_cases}
 \end{table}
-
+Plots in the figure \ref{fig_1d_functions_nll} depict different possible cases of predictions and uncertainty levels whose corresponding NLL, RMSE and EVA values are tabulated in \ref{tab_nll_cases}. It can be inferred from \ref{fig_1d_functions_nll0} and  \ref{fig_1d_functions_nll1} that irrespective of both predictions being identical, width of confidence intervals has a huge impact on their NLL values. Likewise, the prediction in \ref{fig_1d_functions_nll1} is much closer to the target than the one in \ref{fig_1d_functions_nll2}, yet the former is penalized heavily in terms of NLL(2220.67) due to its low value of uncertainty. However, values of EVA remain constant for all scenarios and RMSE changes only when there is a shift in the prediction. This signifies that the interpretation of NLL as a metric for uncertainty estimation quality holds good only when considered along with a measure of predictive accuracy like RMSE.
 
 \section{Predictive accuracy and uncertainty quality}
 \subsection{Udacity steering angle dataset}
