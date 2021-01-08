@@ -1,7 +1,7 @@
 %!TEX root = ../report.tex
 
 \begin{document}
-    \chapter{State of the Art}
+    \chapter{State of the Art}\label{chap_state_of_the_art}
 	This chapter aims to explain the state-of-the-art uncertainty estimation methods considered for this research work. 
 	\section{Dropout as Bayesian Approximation}
 	The method proposed by Gal {\etal} [\cite{gal2016dropout}] estimates model uncertainty in Neural Net models using Dropout [\cite{srivastava2014dropout}] which is a commonly used regularization technique. The work proves the equivalence between a Dropout applied Neural Network model and an approximated Deep Gaussian process model and establishes Dropout as a means to approximate the posterior predictive distribution. The absence of any need to make changes to the optimization process for integrating this method to a Neural Network model can be considered as one of its unique features. The technique applies to Neural Nets meant for both classification and regression tasks. 
