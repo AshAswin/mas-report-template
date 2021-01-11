@@ -79,6 +79,7 @@ selection, it is not a reliable criteria for determining how well an approximate
 Plots in the figure \ref{fig_1d_functions_nll} depict different possible cases of predictions and uncertainty levels whose corresponding NLL, RMSE and EVA values are tabulated in \ref{tab_nll_cases}. It can be inferred from \ref{fig_1d_functions_nll0} and  \ref{fig_1d_functions_nll1} that irrespective of both predictions being identical, width of confidence intervals has a huge impact on their NLL values. Likewise, the prediction in \ref{fig_1d_functions_nll1} is much closer to the target than the one in \ref{fig_1d_functions_nll2}, yet the former is penalized heavily in terms of NLL(2220.67) due to its low value of uncertainty. However, values of EVA remain constant for all scenarios and RMSE changes only when there is a shift in the prediction. This signifies that the interpretation of NLL as a metric for uncertainty estimation quality holds good only when it is considered along with a measure of predictive accuracy like RMSE. Also, the metric can be used to compare methods only when they are evaluated on the same dataset.
 
 \section{Predictive accuracy and uncertainty quality}
+\subsubsection{\textbf{RQ2.} How do the identified uncertainty estimation methods compare with each other and Gaussian Process models, based on their uncertainty estimation quality and prediction accuracy of their respective models?}
 \subsection{Udacity steering angle dataset}
 \subsubsection{Quantitative comparison}
 
@@ -266,6 +267,7 @@ Total& MCDO\_ADF and DER/Evidential& The set of images reported with high/low va
 
 
 \section{Out-Of-Distribution(OOD) testing}
+\subsubsection{\textbf{RQ3.} How do the identified uncertainty estimation methods compare with each other based on their response to Out-Of-Distribution(OOD) and adversarially perturbed inputs?}
 One of the important uses for having an estimate of uncertainty associated with a Neural Net model's output is \enquote{selective prediction}. This means that the confidence estimate can be used to determine the correctness of an output and in turn decide whether to consider it for further processing/decision-making or not. It is crucial for the uncertainty estimation method to produce a higher value of uncertainty when the model faces test samples from an unknown data distribution. This section evaluates the considered uncertainty estimation methods on their response to out-of-distribution inputs.
 \subsection {Response to Out-Of-Distribution data}\label{subsec_ood}
 \subsubsection{Steering angle dataset}
@@ -372,7 +374,7 @@ In the qualitative comparison(\ref{sec_qual_comparison}) of methods on the steer
 		\label{der_fn2}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.18\textwidth}
+	\begin{subfigure}[b]{0.17\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{noise/snow_4}
 		\caption{snow\_coeff = 0.5}

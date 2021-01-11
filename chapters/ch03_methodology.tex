@@ -78,12 +78,18 @@ Dronet, a residual convolutional network architecture is used for experiments co
 
 The model used for experiments takes a gray-scale input of size 200x200 and propagates it through a pair of convolution and max-pooling layers, three residual blocks, a dropout layer, a ReLU activation and finally a fully-connected(fc) layer which outputs predicted steering angles. When it comes to integrating MCDO\_ADF(described in \cite{general_framework}) with Dronet, new dropout layers are introduced before every convolutional layer at the test time. On the other hand, DER (described in \ref{der}) is integrated to Dronet by introducing three more output branches in the last fc layer for outputting parameters of the evidential distribution (described in \ref{sec_evidential_dist}).
 \begin{figure}
-	\includegraphics[scale=0.30]{resnet8}
+	\includegraphics[scale=0.32]{resnet8_new}
 	\caption{(a) Dronet architecture (b) Structure of every residual block . Collision classification output (bounded by the red box) is discarded and the steering angle prediction branch(bounded by the green box) is retained for this experiment.  Image source: [\cite{loquercio2018dronet}] }
 	\label{fig_resnet8}
 \end{figure}
 \subsection{Neural Network for 1D datasets}\label{1D_net}
 In order to conduct experiments on the set of 1D functions, a simple Neural Network architecture consisting of two fully-connected layers and a ReLU(Rectified Linear Unit) non-linearity is used(as shown in). The network is modified based on requirements of the integrated uncertainty estimation method. In the case of variant used with DER, the last fully connected layer is modified to output parameters of the evidential distribution. The MCDO\_ADF variant of the Neural Network contains an additional dropout layer in order to facilitate extraction of MC samples, as described in \ref{general_framework}. Also, after training the model is converted to its ADF equivalent.
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{1d_neural_net}
+	\caption{Block diagram of the NeuralNetwork used with 1D datasets}
+	\label{fig_1dnet}
+\end{figure}
 \subsection{Gaussian Process(GP) models(1D datasets)}
 A pair of Gaussian Process (GP) models are included along side MCDO\_ADF and DER for the evaluation on 1D datasets. Gaussian Processes can be understood as generalization of multi-variate normal distribution to infinite dimensions. In another perspective a GP represents the distribution over possible functions $f(x)$ that are consistent with given data,and is parameterized by mean $m(x)$ and covariance functions($k(x, x^\prime)$). A GP can be represented as follows:
 
@@ -121,38 +127,14 @@ Choice of certain hyperparameter values remains unchanged for training all the t
 
 \subsubsection{Vanilla Dronet}
 A simple dronet model predicts steering angle for the given image input. Training the model involves reduction of the Mean Squared Error (MSE) loss, which is popular choice for regression problems. Optimizing the MSE loss function intuitively means reduction of mean over euclidean distance (L2-Norm) between ground truth labels and predictions of observed data. The MSE loss function can be expressed as follows:
-
 \begin{equation}
 	\mathbf{L}(y,\hat{y})=\frac{1}{N}\sum_{i=0}^{N}(y-\hat{y}_i)^2
 \end{equation} 
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.4]{dronet_mse_loss}
-	\caption{Plot depicting the trend of Mean-Squared-Error loss while training vanilla Dronet}
-	\label{fig_mse_loss_dronet}
-\end{figure}
-
 The technique of early stopping is used to avoid over-fitting, by saving model weights at the epoch corresponding to the least validation loss.
-
 \subsubsection{MCDO\_ADF Dronet}
-This variant of Dronet is trained to facilitate estimation of uncertainty associated with its predictions using the MCDO\_ADF technique. The training procedure for this variant remains unchanged from the Vanilla variant except for the  introduction of dropout after every convolution layer. Though it is sufficient to have the vanilla variant for applying this method, dropout was used during training with an intent to regularize the process.
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.4]{dronet_MCDO_mse_loss_plot}
-	\caption{Plot depicting the trend of Mean-Squared-Error loss while training MCDO\_ADF Dronet}
-	\label{fig_mse_loss_mcdo_dronet}
-\end{figure}
-
-The inference procedure for MCDO\_ADF applied models is clearly explained in \ref{sec_mcdo_adf}. There are three hyper-parameters additionally required for the procedure: 1. Monte-Carlo(MC) sample count 2. Noise-variance 3. Minimum-variance. The value of MC sample count has a direct impact on the inference time as it determines number of forward passes for a given input to determine model uncertainty. For this experiment, we set its value to be 20 to replicate results provided in \cite{loquercio2020a}. Both the values of noise-variance and minimum variance are chosen to be 0.001. Noise variance indicates the level of sensor noise and minimum-variance signifies the minimum value of noise-variance to be propagated through every layer.
-
+This variant of Dronet is trained to facilitate estimation of uncertainty associated with its predictions using the MCDO\_ADF technique. The training procedure for this variant remains unchanged from the Vanilla variant except for the  introduction of dropout after every convolution layer. Though it is sufficient to have the vanilla variant for applying this method, dropout was used during training with an intent to regularize the process. The inference procedure for MCDO\_ADF applied models is clearly explained in \ref{sec_mcdo_adf}. There are three hyper-parameters additionally required for the procedure: 1. Monte-Carlo(MC) sample count 2. Noise-variance 3. Minimum-variance. The value of MC sample count has a direct impact on the inference time as it determines number of forward passes for a given input to determine model uncertainty. For this experiment, we set its value to be 20 to replicate results provided in \cite{loquercio2020a}. Both the values of noise-variance and minimum variance are chosen to be 0.001. Noise variance indicates the level of sensor noise and minimum-variance signifies the minimum value of noise-variance to be propagated through every layer.
 \subsubsection{Evidential Dronet}
 The evidential Dronet model outputs parameters of the evidential distribution(described in the section \ref{sec_evidential_dist}) for a given input image. The distribution parameters can be in turn used to calculate prediction and uncertainty associated with it. Except for the choice of evidential loss function(described in \ref{sec_evi_learning_objectives}) for this model , training criteria remains unchanged from the vanilla variant.
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.4]{dronet_evidential_loss_plot}
-	\caption{Plot depicting the trend of evidential loss while training evidential Dronet}
-	\label{fig_mse_loss_mcdo_dronet}
-\end{figure}
 \subsection{Neural Net with 1D dataset}
 Similar to the case of Dronet, two variants of the simple network described in \ref{1D_net} are used for evaluation. The MCDO\_ADF variant is trained using MSE loss, while evidential loss is used for its evidential counterpart. Also, the MCDO\_ADF variant uses dropout during test time. The following table contains values of hyperparamters that remain common to both the variants.
 \begin{table}[H]

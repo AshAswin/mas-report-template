@@ -1,8 +1,8 @@
-%!TEX root = ../report.tex
 
+%!TEX root = ../report.tex
 \begin{document}
     \chapter{State of the Art}\label{chap_state_of_the_art}
-	This chapter aims to explain the state-of-the-art uncertainty estimation methods considered for this research work. 
+	\subsubsection{RQ1. What are the existing state-of-the-art uncertainty estimation methods in Deep Learning for regression tasks?}.
 	\section{Dropout as Bayesian Approximation}
 	The method proposed by Gal {\etal} [\cite{gal2016dropout}] estimates model uncertainty in Neural Net models using Dropout [\cite{srivastava2014dropout}] which is a commonly used regularization technique. The work proves the equivalence between a Dropout applied Neural Network model and an approximated Deep Gaussian process model and establishes Dropout as a means to approximate the posterior predictive distribution. The absence of any need to make changes to the optimization process for integrating this method to a Neural Network model can be considered as one of its unique features. The technique applies to Neural Nets meant for both classification and regression tasks. 
 	
@@ -62,13 +62,18 @@
 		\item Collect a predefined number(T) of Monte-Carlo(MC) samples by forwarding inputs and noise variances $(x,v))$ stochastically through the network for T times.
 		\item Computation of output predictions and uncertainties  
 	\end{itemize}
-	\begin{figure}[h]
-		\includegraphics[scale=0.35]{adfmcdo}
+	\begin{figure}[H]
+		\includegraphics[width=1.1\textwidth,left]{adfmcdo}
 		\caption{Illustration of the MCDO\_ADF technique.Here $x_{i}$ denotes the input through the $i^{th}$ unit of a given hidden layer,$x_{i^{(n)}}$ denotes the noise variance input to the ith unit of the nth layer. Circles with crosses inscribed denote the dropped out neurons whereas the ones with the Gaussian distribution symbol denote the active units. T values of $\mu$ and $v$ are collected from T stochastic forward passes. Image source:\cite{loquercio2020a} }
 		\label{fig_adf_mcdo}
 	\end{figure}
-	
-	
+	\begin{figure}[H]
+	\includegraphics[width=1.2\textwidth,center]{mcdo_adf_block}
+	\caption{Block diagram depicting inference procedure using MCDO\_ADF in Dronet}
+	\label{fig_mcdo_adf_block}
+	\end{figure}
+		
+
 	
 	
 	
