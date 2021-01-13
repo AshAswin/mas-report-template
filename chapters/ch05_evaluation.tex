@@ -28,8 +28,6 @@ In this research work,the Negative-Log-Likelihood(NLL) metric is used compare pe
 Here $\hat{y}$,$y$,$\sigma^2$ and $N$ represent ground truth labels, predictions, predictive uncertainty and number of data points respectively.
 Lower the value of NLL better the performance of an uncertainty estimation method associated with it. However, the value of NLL highly depends on the number and choice of test points used for evaluation. Therefore, the metric can be used to compare performance of uncertainty estimation methods only when the same data set is used for their evaluation.
 \subsubsection{Limitations of NLL}
-NLL measures the goodness of fit of the approximated posterior distribution to the true function's mean(ground truth). The metric fails to evaluate fidelity of the approximated posterior distribution. Therefore, NLL \enquote{may be a good criteria for model
-selection, it is not a reliable criteria for determining how well an approximate posterior aligns with the true posterior}\cite{yao2019quality}. 
 \begin{figure}[H]
 \centering
 \begin{subfigure}[b]{0.3\textwidth}
@@ -76,9 +74,11 @@ selection, it is not a reliable criteria for determining how well an approximate
 \caption{Different cases to describe the impact of prediction distance and uncertainty levels on metrics}
 \label{tab_nll_cases}
 \end{table}
-Plots in the figure \ref{fig_1d_functions_nll} depict different possible cases of predictions and uncertainty levels whose corresponding NLL, RMSE and EVA values are tabulated in \ref{tab_nll_cases}. It can be inferred from \ref{fig_1d_functions_nll0} and  \ref{fig_1d_functions_nll1} that irrespective of both predictions being identical, width of confidence intervals has a huge impact on their NLL values. Likewise, the prediction in \ref{fig_1d_functions_nll1} is much closer to the target than the one in \ref{fig_1d_functions_nll2}, yet the former is penalized heavily in terms of NLL(2220.67) due to its low value of uncertainty. However, values of EVA remain constant for all scenarios and RMSE changes only when there is a shift in the prediction. This signifies that the interpretation of NLL as a metric for uncertainty estimation quality holds good only when it is considered along with a measure of predictive accuracy like RMSE. Also, the metric can be used to compare methods only when they are evaluated on the same dataset.
+NLL measures the goodness of fit of the approximated posterior distribution to the true function's mean(ground truth). The metric fails to evaluate fidelity of the approximated posterior distribution. Therefore, NLL \enquote{may be a good criteria for model
+selection, it is not a reliable criteria for determining how well an approximate posterior aligns with the true posterior}\cite{yao2019quality}. 
+Plots in the Figure \ref{fig_1d_functions_nll} depict different possible cases of predictions and uncertainty levels whose corresponding NLL, RMSE and EVA values are tabulated in \ref{tab_nll_cases}. It can be inferred from \ref{fig_1d_functions_nll0} and  \ref{fig_1d_functions_nll1} that irrespective of both predictions being identical, width of confidence intervals has a huge impact on their NLL values. Likewise, the prediction in \ref{fig_1d_functions_nll1} is much closer to the target than the one in \ref{fig_1d_functions_nll2}, yet the former is penalized heavily in terms of NLL(2220.67) due to its low value of uncertainty. However, values of EVA remain constant for all scenarios and RMSE changes only when there is a shift in the prediction. This signifies that the interpretation of NLL as a metric for uncertainty estimation quality holds good only when it is considered along with a measure of predictive accuracy like RMSE. Also, the metric can be used to compare methods only when they are evaluated on the same dataset.
 
-\section{Predictive accuracy and uncertainty quality}
+\vfill\section{Predictive accuracy and uncertainty quality}
 \subsubsection{\textbf{RQ2.} How do the identified uncertainty estimation methods compare with each other and Gaussian Process models, based on their uncertainty estimation quality and prediction accuracy of their respective models?}
 \subsection{Udacity steering angle dataset}
 \subsubsection{Quantitative comparison}
@@ -100,17 +100,22 @@ Plots in the figure \ref{fig_1d_functions_nll} depict different possible cases o
 
 \begin{itemize}
 	\item It can be inferred that Evidential Dronet outperforms the other two models in terms of both predictive accuracy and quality of uncertainty estimation(NLL).
-	\item In the case of predictive accuracy expressed in terms of RMSE, Evidential Dronet outperforms the Vanilla variant only by a slight margin. However, difference in RMSE between Evidential and MCDO\_ADF variants is considerable. This could be partly attributed to the fact that both predictions and uncertainty estimates outputted by the MCDO\_ADF variant depend on the count of Monte-Carlo(MC) samples considered. Higher the value of MC samples better the model's performance(refer figure \ref{fig_mc_count_vs_rmse}).  However, this holds true only un till a particular value of MC samples. For this experiment, 20 MC samples are considered. 
+	\item In the case of predictive accuracy expressed in terms of RMSE, Evidential Dronet outperforms the Vanilla variant only by a slight margin. However, difference in RMSE between Evidential and MCDO\_ADF variants is considerable. This could be partly attributed to the fact that both predictions and uncertainty estimates outputted by the MCDO\_ADF variant depend on the count of Monte-Carlo(MC) samples considered. Higher the value of MC samples better the model's performance(refer Figure \ref{fig_mc_count_vs_rmse}).  However, this holds true only un till a particular value of MC samples. For this experiment, 20 MC samples are considered. 
 	\item The relationship between MC sample counts and predictive accuracy holds good for the Explained Variance (EVA) measure as well.
 	\item The quality of predictive uncertainty estimated by the Evidential Dronet expressed in terms of Negative-Log-Likelihood (NLL) is better than the MCDO\_ADF variant. This intuitively means that the former technique is able to determine parameters of the distribution in which likelihood of finding ground truth labels is higher than in the distribution outputted by the latter.
 \end{itemize}
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.3]{RMSE_T20}
-	\caption{A plot depicting relationship between the MC sample count and RMSE during the MCDO\_ADF model inference}
+	\includegraphics[scale=0.5]{RMSE_T20}
+	\caption{Plot depicting relationship between the MC sample count and RMSE during the MCDO\_ADF model inference}
 	\label{fig_mc_count_vs_rmse}
 \end{figure}
-\pagebreak
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.4]{uncertainty_extremes}
+	\caption{A set of sample images with extreme levels of uncertainties predicted by both the methods}
+	\label{fig_uncertainty_extremes}
+\end{figure}
 \subsubsection{Qualitative comparison}
 \begin{table}[H]
 \begin{tabular}[h]{|p{1.5cm}|p{2.3cm}|p{12.5cm}|}
@@ -266,7 +271,7 @@ Total& MCDO\_ADF and DER/Evidential& The set of images reported with high/low va
 \end{figure}
 
 
-\section{Out-Of-Distribution(OOD) testing}
+\vfill\section{Out-Of-Distribution(OOD) testing}
 \subsubsection{\textbf{RQ3.} How do the identified uncertainty estimation methods compare with each other based on their response to Out-Of-Distribution(OOD) and adversarially perturbed inputs?}
 One of the important uses for having an estimate of uncertainty associated with a Neural Net model's output is \enquote{selective prediction}. This means that the confidence estimate can be used to determine the correctness of an output and in turn decide whether to consider it for further processing/decision-making or not. It is crucial for the uncertainty estimation method to produce a higher value of uncertainty when the model faces test samples from an unknown data distribution. This section evaluates the considered uncertainty estimation methods on their response to out-of-distribution inputs.
 \subsection {Response to Out-Of-Distribution data}\label{subsec_ood}
@@ -275,7 +280,7 @@ In the qualitative comparison(\ref{sec_qual_comparison}) of methods on the steer
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.4\textwidth]{noise/original}
-	\caption{Original Image}
+	\caption{Image considered for OOD analysis}
 	\label{fig_original_noise}
 	\hfill
 \end{figure}
@@ -408,42 +413,42 @@ Using image processing techniques, three sets of images are generated by introdu
 Except for the case of images with different levels of fog where MCDO\_ADF shows a desirable response, any significant relationship between the considered set of variables could not be established, in the other two cases. Observations such as unchanging values of uncertainty estimated by DER for increasing levels of fog and snow and existence alignment between uncertainty estimates and predictive error of the DER model variant in the case of dark images, show that factors such as model calibration and invariance of a model to a feature have a role to play. In order to better understand responses of the chosen pair of uncertainty estimation methods to OOD inputs, the analysis is extended to the test split of the steering angle dataset.
 \begin{figure}[H]
 	\centering
-	\begin{subfigure}[b]{0.45\textwidth}
+	\begin{subfigure}[b]{0.4\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{noise/dark-uncertainty}
 		\caption{Levels of darkness Vs Total uncertainty}
 		\label{mcdo_fn2}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.45\textwidth}
+	\begin{subfigure}[b]{0.4\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{noise/dark-error}
 		\caption{Levels of darkness Vs Absolute deviation}
 		\label{der_fn2}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.45\textwidth}
+	\begin{subfigure}[b]{0.4\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{noise/fog-uncertainty}
 		\caption{Levels of fog Vs Total uncertainty}
 		\label{homo_fn3}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.45\textwidth}
+	\begin{subfigure}[b]{0.4\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{noise/fog-error}
 		\caption{Levels of fog Vs Absolute deviation}
 		\label{hetero_fn3}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.45\textwidth}
+	\begin{subfigure}[b]{0.4\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{noise/snow-uncertainty}
 		\caption{Levels of snow Vs Total uncertainty}
 		\label{mcdo_fn3}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.45\textwidth}
+	\begin{subfigure}[b]{0.4\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{noise/snow-error}
 	\caption{Levels of snow Vs Absolute deviation}
@@ -453,8 +458,8 @@ Except for the case of images with different levels of fog where MCDO\_ADF shows
 	\caption{Response to Out-Of-Distribution images (steering angle dataset)}
 	\label{fig_noise_fog}
 \end{figure}
-\subsubsection{Extended analysis}
-Plots in the figure \ref{fig_ood_extended} depict the change in values of uncertainties(averaged over all outputs) and RMSE with respect to increase in darkness level of input images. Existence of an almost linear relationship between increasing darkness level in images and prediction error (RMSE) values of both DER and MCDO\_ADF models is observed. This indicates that both the models are well-calibrated. The MCDO\_ADF method clearly outperforms DER in appropriateness of its response to increasing darkness levels in images, by producing high-valued uncertainty estimates. However its response is inconsistent as uncertainty values(epistemic, aleatoric and total) surge sharply as the darkness coefficient value exceeds 0.7. The reason for this sudden drop could not be determined. In the case of DER, uncertainty levels mostly remain constant and few fluctuations occur. Therefore, any significant relationship could not be established between darkness levels and corresponding uncertainty estimates produced by both the methods. 
+\subsubsection{Extended analysis}\label{ood_extended}
+Plots in the Figure \ref{fig_ood_extended} depict the change in values of uncertainties(averaged over all outputs) and RMSE with respect to increase in darkness level of input images. Existence of an almost linear relationship between increasing darkness level in images and prediction error (RMSE) values of both DER and MCDO\_ADF models is observed. This indicates that both the models are well-calibrated. The MCDO\_ADF method clearly outperforms DER in appropriateness of its response to increasing darkness levels in images, by producing high-valued uncertainty estimates. However its response is inconsistent as uncertainty values(epistemic, aleatoric and total) surge sharply as the darkness coefficient value exceeds 0.7. The reason for this sudden drop could not be determined. In the case of DER, uncertainty levels mostly remain constant and few fluctuations occur. Therefore, any significant relationship could not be established between darkness levels and corresponding uncertainty estimates produced by both the methods. 
 
 \begin{figure}[H]
 	\centering
@@ -466,10 +471,6 @@ Plots in the figure \ref{fig_ood_extended} depict the change in values of uncert
 \subsubsection{1D datasets}
 Train and test data ranges of the set of 1D functions are set in such a way that the Out-Of-Distribution (OOD) regions lie both in-between and on either sides of training data ranges. Owing to the smooth nature of target functions and use of squared exponential kernels GPs perform well both in terms of predictive accuracy and NLL(uncertainty estimation quality) in OOD areas. Both the considered uncertainty estimation methods do not perform well in predicting the mean and estimating uncertainties in OOD regions of fn\_3. Due to narrow confidence intervals proposed by MCDO\_ADF in this region, the method performs poorly in terms of NLL. In the case of fn\_2, predictions of both the methods remain close to the target. The MCDO\_ADF method outperforms DER by reporting a high value of epistemic uncertainty for OOD regions in fn\_1. 
 \subsection{Response to adversarial attacks(for steering angle dataset only)}\label{subsec_adv}
-Adversarial examples are malicious inputs designed to fool machine learning models[\cite{kurakin2016adversarial}]. Such data samples can be considered as an extreme case of Out-Of-Distribution as they are synthesized by perturbing inputs in an adversarial fashion to cause maximum error on the model prediction. An uncertainty estimation method needs to be capable of identifying and reporting an adversarially perturbed input data sample by producing a high value of uncertainty. 
-
-In order to evaluate responses of the considered uncertainty estimation methods, samples from training data distribution are perturbed using the FGSM(Fast Gradient Sign Method)\cite{goodfellow2015explaining} and fed to models. A set of images produced from a given image subject to different levels of adversarial perturbations is shown in the figure\ref{fig_adv_example}. Adversarial images fed to a given Dronet model variant are synthesized using perturbations generated by its own.  
-
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.19\textwidth}
@@ -510,21 +511,20 @@ In order to evaluate responses of the considered uncertainty estimation methods,
 	\label{fig_adv_example}
 \end{figure}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.40]{adversarial/adv_plots}
-	\caption{Plots of $\epsilon$(adversarial perturbations) against uncertainties and RMSE}
-	\label{fig_adv_analysis}
-\end{figure}
-
-
-
-Plots in the figure \ref{fig_adv_analysis} depict the impact of increasing perturbation levels(denoted by $\epsilon$) on average values of uncertainty estimates and RMSE values respectively, for both model variants. The following can be inferred from the set of plots:
+Adversarial examples are malicious inputs designed to fool machine learning models[\cite{kurakin2016adversarial}]. Such data samples can be considered as an extreme case of Out-Of-Distribution as they are synthesized by perturbing inputs in an adversarial fashion to cause maximum error on the model prediction. An uncertainty estimation method needs to be capable of identifying and reporting an adversarially perturbed input data sample by producing a high value of uncertainty. 
+In order to evaluate responses of the considered uncertainty estimation methods, samples from training data distribution are perturbed using the FGSM(Fast Gradient Sign Method)\cite{goodfellow2015explaining} and fed to models. A set of images produced from a given image subject to different levels of adversarial perturbations is shown in the Figure\ref{fig_adv_example}. Adversarial images fed to a given Dronet model variant are synthesized using perturbations generated by its own.  
+Plots in the Figure \ref{fig_adv_analysis} depict the impact of increasing perturbation levels(denoted by $\epsilon$) on average values of uncertainty estimates and RMSE values respectively, for both model variants. The following can be inferred from the set of plots in the Figure \ref{fig_adv_analysis}:
 \begin{itemize}
 	\item The existence of linear relationships between $\epsilon$ , RMSE and total variance respectively is desirable and indicates that the MCDO\_ADF model variant is better calibrated(alignment between error and uncertainty) than its DER counterpart.
 	\item  Though aleatoric uncertainties estimated by DER are more sensitive to increasing levels of $\epsilon$ than MCDO\_ADF, the method's response is non-linear in nature.
 	\item  Epistemic uncertainty forms the major component of total uncertainty estimated by MCDO\_ADF while the aleatoric component dominates in the case of DER.
 \end{itemize}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.35]{adversarial/adv_plots}
+	\caption{Plots of $\epsilon$(adversarial perturbations) against uncertainties and RMSE}
+	\label{fig_adv_analysis}
+\end{figure}
 \subsubsection{Spearman's correlation analysis}
 
 Spearman's rank correlation (often denoted by $\rho$) is a measure of statistical dependence between a pair of variables. Intuitively $\rho$ indicates the strength and direction of association between two ranked variables. $\rho$ varies between -1 and 1. The direction of association is indicated by sign of $\rho$ while its magnitude indicates the strength of correlation between the variable pair.
@@ -561,17 +561,28 @@ The following can be inferred from the computed correlation coefficient matrices
 
 \begin{table}[H]
 	\centering
-	\begin{tabular}{|c|c|c|}
+	\begin{tabular}{|c|c|c|} 
 		\hline
-		\textbf{Experiment}                                                                                          & \textbf{Metric}                                                                                  & \textbf{Better performer} \\ \hline
-		\multirow{3}{*}{\begin{tabular}[c]{@{}c@{}}Udacity steering angle \\ test dataset evaluation\end{tabular}}   & NLL                                                                                              & DER                       \\ \cline{2-3} 
-		& RMSE                                                                                             & DER                       \\ \cline{2-3} 
-		& EVA                                                                                              & DER                       \\ \hline
-		\multirow{2}{*}{1D datasets}                                                                                  & NLL                                                                                              & DER                       \\ \cline{2-3} 
-		& RMSE                                                                                             & MCDO\_ADF                 \\ \hline
-		\begin{tabular}[c]{@{}c@{}}Response to \\ adversarial attacks\end{tabular}                                   & \begin{tabular}[c]{@{}c@{}}Spearman's rank correlation\\ coefficient between \\perturbations and uncertainty\end{tabular} & MCDO\_ADF                 \\ \hline
-		\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Response to Out-Of-Distribution inputs\\ (1D datasets)\end{tabular}} & NLL                                                                                              & DER                       \\ \cline{2-3} 
-		& RMSE                                                                                             & MCDO\_ADF                 \\ \hline
+		\textbf{Experiment}                                                                                             & \textbf{Metric}                                                                                                            & \textbf{Better performer}   \\ 
+		\hline
+		\multirow{4}{*}{\begin{tabular}[c]{@{}c@{}}Udacity steering angle \\ test dataset evaluation \end{tabular}}     & NLL                                                                                                                        & DER                         \\ 
+		\cline{2-3}
+		& RMSE                                                                                                                       & DER                         \\ 
+		\cline{2-3}
+		& EVA                                                                                                                        & DER                         \\ 
+		\cline{2-3}
+		& Qualitative comparison                                                                                                     & MCDO\_ADF                   \\ 
+		\hline
+		\multirow{2}{*}{1D datasets}                                                                                    & NLL                                                                                                                        & DER                         \\ 
+		\cline{2-3}
+		& RMSE                                                                                                                       & MCDO\_ADF                   \\ 
+		\hline
+		\begin{tabular}[c]{@{}c@{}}Response to \\ adversarial attacks \end{tabular}                                     & \begin{tabular}[c]{@{}c@{}}Spearman's rank correlation\\ coefficient between \\perturbations and uncertainty \end{tabular} & MCDO\_ADF                   \\ 
+		\hline
+		\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Response to Out-Of-Distribution inputs\\(1D datasets) \end{tabular}} & NLL                                                                                                                        & DER                         \\ 
+		\cline{2-3}
+		& RMSE                                                                                                                       & MCDO\_ADF                   \\
+		\hline
 	\end{tabular}
 \caption{Table of conducted experiments and their results}
 \label{tab_eval_summary}

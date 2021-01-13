@@ -2,10 +2,12 @@
 
 \begin{document}
     \begin{abstract}
-    Deep Neural Network models are increasingly becoming a part of many Artificial Intelligence (AI) systems for safety-critical applications. However, their tendency to make over-confident and false predictions raises concerns on functional safety of their host systems. One of the ways in which the Deep Learning(DL) research community tries to solve this problem is by devising methods that estimate uncertainties(inversely confidences) associated with predictions of Neural Network(NN) models which are then utilized by the host AI systems to decide whether low-confidence decisions need further validation.
-    \\
+    Deep Neural Network models are increasingly becoming a part of many Artificial Intelligence (AI) systems for safety-critical applications. However, their tendency to make over-confident and false predictions raises concerns on functional safety of their host systems. One of the ways in which the Deep Learning(DL) research community tries to solve this problem is by devising methods that estimate uncertainties associated with predictions of Neural Network(NN) models which are then utilized by the host AI systems to decide whether low-confidence decisions need further validation.
+
+
     A considerable amount of research conducted on this topic has been attributed to methods that estimate uncertainties of Neural Network models for classification and only relatively fewer works focus on approaches for regression nets. There arises the need to enhance the existing or devise better uncertainty estimation methods suited for Neural Net models performing regression tasks. Also, there does not exist a comprehensive benchmark for such class of uncertainty estimation methods, which would reveal potential methods for the DL research community to conduct further research. This work compensates the need for such a benchmark which performs a detailed comparative evaluation of uncertainty estimation methods for regression nets.
-    \\
+
+
     In this work, state-of-the-art uncertainty estimation methods are carefully reviewed, analyzed and evaluated on the Udacity steering angle dataset and a group of three 1D datasets. The results show that  \enquote{Deep Evidential Regression}(DER) outperforms other methods in terms of uncertainty estimation quality and prediction accuracy, while the method that combines \enquote{Monte-Carlo Dropout and Assumed Density Filtering}(MCDO\_ADF) succeeds in providing an appropriate response to Out-Of-Distribution(OOD) and adversarially perturbed inputs.   
     \end{abstract}
 \end{document}

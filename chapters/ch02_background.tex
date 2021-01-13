@@ -1,0 +1,43 @@
+%!TEX root = ../report.tex
+
+\begin{document}
+    \chapter{Background}
+	A reader of this research report is expected to possess an undergrad level knowledge of Probability theory and also be familiar with basic concepts of Deep Learning and Bayesian Inference. Background information on topics specific to this research work is provided along with the corresponding method explanations. This chapter provides a brief description about the two components of predictive uncertainty commonly considered by uncertainty estimation methods: epistemic and aleatoric.
+	\section{Components of predictive uncertainty} 
+	\subsection{Epistemic uncertainty}
+		\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.30]{epistemic_ood}
+		\caption{Plot depicting high levels of epistemic uncertainty associated with predictions for Out-Of-Distribution inputs}
+		\label{fig_epi_ood}
+		\end{figure}
+	Epistemic or Model uncertainty arises from  the lack of inherent capacity of a Neural Net model to make predictions. The following contribute to model uncertainty:
+	\begin{itemize}
+		\item Dataset shift: mismatch between training and test data distributions
+		\item Structure uncertainty: uncertainty in selecting the right model structure
+		\item Uncertainty in selecting the right set of model parameters which best represents the observed data.
+		\item Lack of knowledge in a model's portion about a given input.
+	\end{itemize}
+	Epistemic uncertainty is reducible in nature and can be explained away by training a given model with more data. Predictions for inputs from Out-Of-Distribution(OOD) region have a relatively higher value of model uncertainty linked to them than ones from within the region of training data. 
+
+	\subsection{Aleatoric uncertainty}
+		 \begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.5]{homo_hetero}
+		\caption[Homoscedastic and heteroscedastic model outputs]{Plot depicting the difference between homoscedastic and heteroscedastic noise models}
+		\label{fig_homo_hetero}
+	\end{figure}
+	Aleatoric uncertainty(also called as data uncertainty) arises due to presence of noise in data. The following contribute to data uncertainty:
+	\begin{itemize}
+	\item Measurement imprecision
+	\item Complex and multi-modal nature of data
+	\item Digitization
+	\item Artifacts from data pre-processing and compression techniques
+	\item Random noise
+	\end{itemize}
+ 	Aleatoric uncertainty is considered to be irreducible as it cannot be compensated by training a given Neural Network model with more data, as in the case of model uncertainty.
+ 	Unlike model uncertainty, aleatoric uncertainty levels do not increase abruptly for Out-Of-Distribution(OOD) inputs. Based on the relationship assumed between inputs and aleatoric uncertainty in a given problem, noise models can be categorized into two: homoscedastic and heteroscedastic. In a heteroscedastic model, aleatoric uncertainty is modeled as a function of inputs, while in the case of homoscedastic a constant value of aleatoric uncertainty is considered. Plots in the Figure \ref{fig_homo_hetero} show the difference between outputs of models with homoscedastic and heteroscedastic assumptions.
+
+	\section{Relationship between epistemic and aleatoric uncertainties}
+	 	\enquote{The total uncertainty results from the combination of the model and data uncertainty.}\cite{loquercio2020a} and there also exists a relationship between them. Whenever aleatoric uncertainty linked to an input sample increases beyond a certain extent, it causes the sample to significantly deviate from its original structure resulting in increased epistemic uncertainty levels of a given model. Therefore, it is important for any uncertainty estimation method to not consider the pair of uncertainty components to be mutually-exclusive. 
+	 \end{document}
