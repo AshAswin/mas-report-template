@@ -28,32 +28,35 @@ In this research work, the NLL metric is used compare performances of the uncert
 Here $y$,$\hat{y}$,$\sigma^2$ and $N$ represent ground truth labels, predictions, predictive uncertainty and number of data points respectively.
 Lower the value of NLL better the performance of an uncertainty estimation method associated with it. However, the value of NLL highly depends on the number and choice of test points used for evaluation. Therefore, the metric can be used to compare performance of uncertainty estimation methods only when the same data set is used for their evaluation.
 \subsubsection{Limitations of NLL}
+NLL measures the goodness of fit of the approximated posterior distribution to the true function's mean(ground truth). The metric however fails to evaluate fidelity of the approximated posterior distribution. Therefore, NLL \enquote{may be a good criteria for model selection, it is not a reliable criteria for determining how well an approximate posterior aligns with the true posterior} \cite{yao2019quality}. Plots in the Figure \ref{fig_1d_functions_nll} depict different possible cases of predictions and uncertainty levels whose corresponding NLL, RMSE and EVA values are tabulated in Table \ref{tab_nll_cases}.
+
+ It can be inferred from Figure \ref{fig_1d_functions_nll0} and Figure \ref{fig_1d_functions_nll1} that irrespective of both predictions being identical, width of confidence intervals has a huge impact on their NLL values. Likewise, the prediction in Figure \ref{fig_1d_functions_nll1} is much closer to the target than the one in Figure \ref{fig_1d_functions_nll2}, yet the former is penalized heavily in terms of NLL (2220.67) due to its low value of uncertainty. However, values of EVA remain constant for all scenarios and RMSE changes only when there is a shift in the prediction. This signifies that the interpretation of NLL as a metric for uncertainty estimation quality holds good only when it is considered along with a measure of predictive accuracy like RMSE. Also, the metric can be used to compare methods only when they are evaluated on a given dataset.
 \begin{figure}[H]
 \centering
 \begin{subfigure}[b]{0.45\textwidth}
 	\centering
-	\includegraphics[scale=0.15]{nll/near_large}
+	\includegraphics[scale=0.20]{nll/near_large.pdf}
 	\caption{Close prediction with high uncertainty}
 	\label{fig_1d_functions_nll0}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.45\textwidth}
 	\centering
-	\includegraphics[scale=0.15]{nll/near_small}
+	\includegraphics[scale=0.20]{nll/near_small.pdf}
 	\caption{Close prediction with low uncertainty}
 	\label{fig_1d_functions_nll1}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.45\textwidth}
 	\centering
-	\includegraphics[scale=0.15]{nll/far_large}
+	\includegraphics[scale=0.20]{nll/far_large.pdf}
 	\caption{Far prediction with high uncertainty}
 	\label{fig_1d_functions_nll2}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.45\textwidth}
 	\centering
-	\includegraphics[scale=0.15]{nll/far_small}
+	\includegraphics[scale=0.20]{nll/far_small.pdf}
 	\caption{Far prediction with low uncertainty}
 	\label{fig_1d_functions_nll3}
 \end{subfigure}
@@ -74,13 +77,9 @@ Lower the value of NLL better the performance of an uncertainty estimation metho
 \caption{Different cases to describe the impact of prediction distance and uncertainty levels on metrics}
 \label{tab_nll_cases}
 \end{table}
-NLL measures the goodness of fit of the approximated posterior distribution to the true function's mean(ground truth). The metric however fails to evaluate fidelity of the approximated posterior distribution. Therefore, NLL \enquote{may be a good criteria for model
-selection, it is not a reliable criteria for determining how well an approximate posterior aligns with the true posterior} \cite{yao2019quality}.
 
- 
-Plots in the Figure \ref{fig_1d_functions_nll} depict different possible cases of predictions and uncertainty levels whose corresponding NLL, RMSE and EVA values are tabulated in Table \ref{tab_nll_cases}. It can be inferred from Figure \ref{fig_1d_functions_nll0} and Figure \ref{fig_1d_functions_nll1} that irrespective of both predictions being identical, width of confidence intervals has a huge impact on their NLL values. Likewise, the prediction in Figure \ref{fig_1d_functions_nll1} is much closer to the target than the one in Figure \ref{fig_1d_functions_nll2}, yet the former is penalized heavily in terms of NLL (2220.67) due to its low value of uncertainty. However, values of EVA remain constant for all scenarios and RMSE changes only when there is a shift in the prediction. This signifies that the interpretation of NLL as a metric for uncertainty estimation quality holds good only when it is considered along with a measure of predictive accuracy like RMSE. Also, the metric can be used to compare methods only when they are evaluated on a given dataset.
-
-\vfill\section{Predictive Accuracy and Uncertainty Quality}
+\vfill
+\section{Predictive Accuracy and Uncertainty Quality}
 \subsubsection{\textbf{RQ2.} How do the identified uncertainty estimation methods compare with each other and Gaussian Process models, based on their uncertainty estimation quality and prediction accuracy of their respective models?}
 \subsection{Udacity Steering Angle Dataset}
 \subsubsection{Quantitative Comparison}
@@ -176,49 +175,47 @@ Total& MCDO\_ADF and DER/Evidential& The set of images reported with high/low va
 	\item The MCDO\_ADF technique  performs relatively better than DER in estimating epistemic uncertainties for fn\_1 (refer Figure \ref{mcdo_fn1}), while its performance plummets in the case of fn\_3 (refer Figure \ref{mcdo_fn3}) where it fails to report high values of uncertainty for the OOD region which results in a very high value of NLL.
 	\item The MCDO\_ADF variant of the neural network model performs better than its DER counterpart in modeling smoothness of functions. While in the case of GPs, the use of squared-exponential kernels as priors leads to better modeling of such functions.  
 	\item The success of homoscedastic GPs in modeling  aleatoric uncertainties can be attributed to constancy in variance of Gaussian distribution used for adding noise to input data generated from a given function. 
-	
-	
 \end{itemize}
 \begin{figure}[H]
 	\centering
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/homo_fn1}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/homo_fn1.pdf}
 		\caption{Homoscedastic GP on fn\_1: $y=\frac{sin(3x)}{3x}$}
 		\label{homo_fn1}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/hetero_fn1}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/hetero_fn1.pdf}
 		\caption{Heteroscedastic GP on fn\_1: $y=\frac{sin(3x)}{3x}$}
 		\label{hetero_fn1}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn1}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/mcdo_fn1.pdf}
 		\caption{MCDO\_ADF on fn\_1: $y=\frac{sin(3x)}{3x}$}
 		\label{mcdo_fn1}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/der_fn1}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/der_fn1.pdf}
 		\caption{DER on fn\_1: $y=\frac{sin(3x)}{3x}$}
 		\label{der_fn1}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/homo_fn2}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/homo_fn2.pdf}
 		\caption{Homoscedastic GP on fn\_2: $y=0.1x^3$}
 		\label{homo_fn2}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/hetero_fn2}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/hetero_fn2.pdf}
 		\caption{Heteroscedastic GP on fn\_2: $y=0.1x^3$}
 		\label{hetero_fn2}
 	\end{subfigure}
@@ -226,44 +223,44 @@ Total& MCDO\_ADF and DER/Evidential& The set of images reported with high/low va
 
 \begin{figure}[H]\ContinuedFloat
 	\centering
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn2}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/mcdo_fn2.pdf}
 		\caption{MCDO\_ADF on fn\_2: $y=0.1x^3$}
 		\label{mcdo_fn2}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/der_fn2}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/der_fn2.pdf}
 		\caption{DER on fn\_2: $y=0.1x^3$}
 		\label{der_fn2}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/homo_fn3}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/homo_fn3.pdf}
 		\caption{Homoscedastic GP on fn\_3: $y=-(1+x)sin(1.2x)$}
 		\label{homo_fn3}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/hetero_fn3}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/hetero_fn3.pdf}
 		\caption{Heteroscedastic GP on fn\_3: $y=-(1+x)sin(1.2x)$}
 		\label{hetero_fn3}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/mcdo_fn3}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/mcdo_fn3.pdf}
 		\caption{MCDO\_ADF on fn\_3: $y=-(1+x)sin(1.2x)$}
 		\label{mcdo_fn3}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{toy_dataset/der_fn3}
+		\includegraphics[scale=0.19]{toy_dataset_pdf/der_fn3.pdf}
 		\caption{DER on fn\_3: $y=-(1+x)sin(1.2x)$}
 		\label{der_fn3}
 	\end{subfigure}
@@ -271,9 +268,8 @@ Total& MCDO\_ADF and DER/Evidential& The set of images reported with high/low va
 	\caption{Plots depicting application of uncertainty estimation methods on 1D datasets}
 	\label{fig_1d_functions}
 \end{figure}
-
-
-\vfill\section{Out-Of-Distribution (OOD) Testing}
+\vfill
+\section{Out-Of-Distribution (OOD) Testing}
 \subsubsection{\textbf{RQ3.} How do the identified uncertainty estimation methods compare with each other based on their response to OOD and adversarially perturbed inputs?}
 One of the important uses for having an estimate of uncertainty associated with a neural net model's output is \enquote{selective prediction}. This means that the confidence estimate can be used to determine the correctness of an output and in turn decide whether to consider it for further processing/decision-making or not. It is crucial for an uncertainty estimation method to produce a higher value of uncertainty when its model faces test samples from an unknown data distribution. This section evaluates the considered uncertainty estimation methods on their response to out-of-distribution inputs.
 \subsection {Response to OOD Data}\label{subsec_ood}
